@@ -46,6 +46,14 @@ matrix:
       env: MAGENTO_VERSION=2.2 TEST_SUITE=js GRUNT_COMMAND=static
     - php: 7.0
       env: MAGENTO_VERSION=2.2 TEST_SUITE=functional
+    - php: 7.1
+      env: MAGENTO_VERSION=2.1 TEST_SUITE=integration INTEGRATION_INDEX=1
+    - php: 7.1
+      env: MAGENTO_VERSION=2.1 TEST_SUITE=integration INTEGRATION_INDEX=2
+    - php: 7.1
+      env: MAGENTO_VERSION=2.1 TEST_SUITE=integration INTEGRATION_INDEX=3
+    - php: 7.1
+      env: MAGENTO_VERSION=2.1 TEST_SUITE=functional
 cache:
   apt: true
   directories:
