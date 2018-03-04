@@ -6,8 +6,7 @@ namespace MercadoPago\Core\Model\System\Config\Source;
  *
  * @package MercadoPago\Core\Model\System\Config\Source
  */
-class PaymentMethods
-    implements \Magento\Framework\Option\ArrayInterface
+class PaymentMethods implements \Magento\Framework\Option\ArrayInterface
 {
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
@@ -31,8 +30,7 @@ class PaymentMethods
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \MercadoPago\Core\Helper\Data $coreHelper,
         \Magento\Backend\Block\Store\Switcher $switcher
-    )
-    {
+    ) {
         $this->scopeConfig = $scopeConfig;
         $this->coreHelper = $coreHelper;
         $this->_switcher = $switcher;
@@ -84,7 +82,9 @@ class PaymentMethods
         $meHelper->log("Get payment methods by country... ", 'mercadopago');
         $meHelper->log("API payment methods: " . "/v1/payment_methods?access_token=" . $accessToken, 'mercadopago');
         try {
-            $response = \MercadoPago\Core\Lib\RestClient::get('/sites/'. strtoupper($country) .'/payment_methods?marketplace=NONE');
+            $response = \MercadoPago\Core\Lib\RestClient::get(
+                '/sites/'. strtoupper($country) .'/payment_methods?marketplace=NONE'
+            );
         } catch (\Exception $e) {
             return [];
         }

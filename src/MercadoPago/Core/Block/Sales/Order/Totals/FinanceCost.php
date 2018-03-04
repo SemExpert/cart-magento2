@@ -9,8 +9,7 @@ use Magento\Sales\Model\Order;
  *
  * @package MercadoPago\Core\Block\Sales\Order\Totals
  */
-class FinanceCost
-    extends \Magento\Framework\View\Element\Template
+class FinanceCost extends \Magento\Framework\View\Element\Template
 {
 
     /**

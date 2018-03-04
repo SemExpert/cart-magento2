@@ -6,9 +6,7 @@ namespace MercadoPago\Core\Controller\Notifications;
  *
  * @package MercadoPago\Core\Controller\Notifications
  */
-class Standard
-    extends \Magento\Framework\App\Action\Action
-
+class Standard extends \Magento\Framework\App\Action\Action
 {
     /**
      * @var \MercadoPago\Core\Model\Standard\PaymentFactory
@@ -59,8 +57,7 @@ class Standard
         \MercadoPago\Core\Helper\StatusUpdate $statusHelper,
         \MercadoPago\Core\Model\Core $coreModel,
         \Magento\Sales\Model\OrderFactory $orderFactory
-    )
-    {
+    ) {
         $this->_paymentFactory = $paymentFactory;
         $this->coreHelper = $coreHelper;
         $this->coreModel = $coreModel;
@@ -139,7 +136,6 @@ class Standard
             $data = $this->_getDataPayments($merchantOrder);
             $statusFinal = $this->_statusHelper->getStatusFinal($data['status'], $merchantOrder);
             $shipmentData = $this->_statusHelper->getShipmentsArray($merchantOrder);
-
         } elseif ($topic == 'payment') {
             $data = $this->_getFormattedPaymentData($id);
             $statusFinal = $data['status'];
@@ -148,7 +144,6 @@ class Standard
             $response = $this->coreModel->getPaymentV1($id);
             $payment = $response['response'];
             $payment = $this->coreHelper->setPayerInfo($payment);
-
         } else {
             $this->_responseLog();
 
@@ -186,14 +181,16 @@ class Standard
             $this->getResponse()->setHttpResponseCode(\MercadoPago\Core\Helper\Response::HTTP_OK);
         }
         if ($this->_shipmentExists($shipmentData, $merchantOrder)) {
-            $this->_eventManager->dispatch('mercadopago_standard_notification_received',
-                ['payment'        => $data,
-                 'merchant_order' => $merchantOrder]
+            $this->_eventManager->dispatch(
+                'mercadopago_standard_notification_received',
+                [
+                    'payment'        => $data,
+                    'merchant_order' => $merchantOrder
+                ]
             );
         }
 
         $this->_responseLog();
-
     }
 
     /**
@@ -205,7 +202,7 @@ class Standard
      */
     protected function _getDataPayments($merchantOrder)
     {
-        $data = array();
+        $data = [];
         foreach ($merchantOrder['payments'] as $payment) {
             $response = $this->coreModel->getPayment($payment['id']);
             $payment = $response['response']['collection'];
@@ -227,7 +224,11 @@ class Standard
         if ($this->_order->getId()) {
             return true;
         }
-        $this->coreHelper->log(\MercadoPago\Core\Helper\Response::INFO_EXTERNAL_REFERENCE_NOT_FOUND, self::LOG_NAME, $this->_requestData->getParams());
+        $this->coreHelper->log(
+            \MercadoPago\Core\Helper\Response::INFO_EXTERNAL_REFERENCE_NOT_FOUND,
+            self::LOG_NAME,
+            $this->_requestData->getParams()
+        );
         $this->getResponse()->getBody(\MercadoPago\Core\Helper\Response::INFO_EXTERNAL_REFERENCE_NOT_FOUND);
         $this->getResponse()->setHttpResponseCode(\MercadoPago\Core\Helper\Response::HTTP_NOT_FOUND);
         $this->coreHelper->log("Http code", self::LOG_NAME, $this->getResponse()->getHttpResponseCode());

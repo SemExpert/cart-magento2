@@ -12,8 +12,7 @@ use Magento\Payment\Helper\Data as PaymentHelper;
  *
  * @package MercadoPago\Core\Model
  */
-class CustomConfigProvider
-    implements ConfigProviderInterface
+class CustomConfigProvider implements ConfigProviderInterface
 {
     /**
      * @var \Magento\Payment\Model\MethodInterface
@@ -46,7 +45,6 @@ class CustomConfigProvider
      */
     protected $_request;
 
-
     /**
      * @var \Magento\Framework\View\Asset\Repository
      */
@@ -78,8 +76,7 @@ class CustomConfigProvider
         \Magento\Framework\View\Asset\Repository $assetRepo,
         \Magento\Framework\App\ProductMetadataInterface $productMetadata,
         \MercadoPago\Core\Helper\Data $coreHelper
-    )
-    {
+    ) {
         $this->_request = $context->getRequest();
         $this->methodInstance = $paymentHelper->getMethodInstance($this->methodCode);
         $this->_scopeConfig = $scopeConfig;
@@ -90,7 +87,6 @@ class CustomConfigProvider
         $this->_productMetaData = $productMetadata;
         $this->_coreHelper = $coreHelper;
     }
-
 
     /**
      * Gather information to be sent to javascript method renderer
@@ -107,16 +103,41 @@ class CustomConfigProvider
         return [
             'payment' => [
                 $this->methodCode => [
-                    'bannerUrl'        => $this->_scopeConfig->getValue('payment/mercadopago_custom/banner_checkout', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                    'country'          => strtoupper($this->_scopeConfig->getValue('payment/mercadopago/country', 'default', $this->_storeManager->getStore()->getId())),
+                    'bannerUrl'        => $this->_scopeConfig->getValue(
+                        'payment/mercadopago_custom/banner_checkout',
+                        \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                    ),
+                    'country'          => strtoupper(
+                        $this->_scopeConfig->getValue(
+                            'payment/mercadopago/country',
+                            'default',
+                            $this->_storeManager->getStore()->getId()
+                        )
+                    ),
                     'grand_total'      => $this->_checkoutSession->getQuote()->getGrandTotal(),
-                    'base_url'         => $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK),
+                    'base_url'         => $this->_storeManager->getStore()
+                        ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK),
                     'success_url'      => $this->methodInstance->getConfigData('order_place_redirect_url'),
-                    'logEnabled'       => $this->_scopeConfig->getValue('payment/mercadopago/logs', 'default', $this->_storeManager->getStore()->getId()),
-                    'discount_coupon'  => $this->_scopeConfig->isSetFlag('payment/mercadopago_custom/coupon_mercadopago', 'default', $this->_storeManager->getStore()->getId()),
-                    'second_card'      => $this->_scopeConfig->isSetFlag('payment/mercadopago_custom/allow_2_cards', 'default', $this->_storeManager->getStore()->getId()),
+                    'logEnabled'       => $this->_scopeConfig->getValue(
+                        'payment/mercadopago/logs',
+                        'default',
+                        $this->_storeManager->getStore()->getId()
+                    ),
+                    'discount_coupon'  => $this->_scopeConfig->isSetFlag(
+                        'payment/mercadopago_custom/coupon_mercadopago',
+                        'default',
+                        $this->_storeManager->getStore()->getId()
+                    ),
+                    'second_card'      => $this->_scopeConfig->isSetFlag(
+                        'payment/mercadopago_custom/allow_2_cards',
+                        'default',
+                        $this->_storeManager->getStore()->getId()
+                    ),
                     'route'            => $this->_request->getRouteName(),
-                    'public_key'       => $this->_scopeConfig->getValue('payment/mercadopago_custom/public_key', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                    'public_key'       => $this->_scopeConfig->getValue(
+                        'payment/mercadopago_custom/public_key',
+                        \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                    ),
                     'customer'         => $this->methodInstance->getCustomerAndCards(),
                     'loading_gif'      => $this->_assetRepo->getUrl('MercadoPago_Core::images/loading.gif'),
                     'text-currency'    => __('$'),
@@ -130,5 +151,4 @@ class CustomConfigProvider
             ],
         ];
     }
-
 }

@@ -8,8 +8,7 @@ namespace MercadoPago\Core\Block\Standard;
  *
  * @package MercadoPago\Core\Block\Standard
  */
-class Success
-    extends \MercadoPago\Core\Block\AbstractSuccess
+class Success extends \MercadoPago\Core\Block\AbstractSuccess
 {
     /**
      * Set template in constructor method
@@ -19,5 +18,4 @@ class Success
         parent::_construct();
         $this->setTemplate('standard/success.phtml');
     }
-
 }

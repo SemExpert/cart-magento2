@@ -12,8 +12,7 @@ use Magento\Payment\Helper\Data as PaymentHelper;
  *
  * @package MercadoPago\Core\Model
  */
-class CustomTicketConfigProvider
-    implements ConfigProviderInterface
+class CustomTicketConfigProvider implements ConfigProviderInterface
 {
     /**
      * @var \Magento\Payment\Model\MethodInterface
@@ -70,8 +69,7 @@ class CustomTicketConfigProvider
         \Magento\Framework\View\Asset\Repository $assetRepo,
         \MercadoPago\Core\Helper\Data $coreHelper,
         \Magento\Framework\App\ProductMetadataInterface $productMetadata
-    )
-    {
+    ) {
         $this->_request = $context->getRequest();
         $this->methodInstance = $paymentHelper->getMethodInstance($this->methodCode);
         $this->_checkoutSession = $checkoutSession;
@@ -93,23 +91,35 @@ class CustomTicketConfigProvider
                 $this->methodCode => [
                     'bannerUrl'       => $this->methodInstance->getConfigData('banner_checkout'),
                     'options'         => $this->methodInstance->getTicketsOptions(),
-                    'country'         => strtoupper($this->_scopeConfig->getValue('payment/mercadopago/country', \Magento\Store\Model\ScopeInterface::SCOPE_STORE)),
+                    'country'         => strtoupper($this->_scopeConfig->getValue(
+                        'payment/mercadopago/country',
+                        \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                    ),
                     'grand_total'     => $this->_checkoutSession->getQuote()->getGrandTotal(),
                     'success_url'     => $this->methodInstance->getConfigData('order_place_redirect_url'),
                     'route'           => $this->_request->getRouteName(),
-                    'base_url'        => $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK),
-                    'discount_coupon' => $this->_scopeConfig->getValue('payment/mercadopago_customticket/coupon_mercadopago', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                    'base_url'        => $this->_storeManager->getStore()
+                        ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK),
+                    'discount_coupon' => $this->_scopeConfig->getValue(
+                        'payment/mercadopago_customticket/coupon_mercadopago',
+                        \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                    ),
                     'loading_gif'     => $this->_assetRepo->getUrl('MercadoPago_Core::images/loading.gif'),
-                    'logEnabled'      => $this->_scopeConfig->getValue('payment/mercadopago/logs', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                    'logEnabled'      => $this->_scopeConfig->getValue(
+                        'payment/mercadopago/logs',
+                        \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                    ),
                     'logoUrl'         => $this->_assetRepo->getUrl("MercadoPago_Core::images/mp_logo.png"),
-                    'analytics_key'   => $this->_coreHelper->getClientIdFromAccessToken($this->_scopeConfig->getValue(\MercadoPago\Core\Helper\Data::XML_PATH_ACCESS_TOKEN, \Magento\Store\Model\ScopeInterface::SCOPE_STORE)),
+                    'analytics_key'   => $this->_coreHelper->getClientIdFromAccessToken(
+                        $this->_scopeConfig->getValue(
+                            \MercadoPago\Core\Helper\Data::XML_PATH_ACCESS_TOKEN,
+                            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                        )
+                    ),
                     'platform_version' => $this->_productMetaData->getVersion(),
                     'module_version'   => $this->_coreHelper->getModuleVersion()
                 ],
             ],
         ] : [];
     }
-
-
-
 }

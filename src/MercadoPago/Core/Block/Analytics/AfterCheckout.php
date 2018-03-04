@@ -23,5 +23,4 @@ class AfterCheckout extends \Magento\Framework\View\Element\Template
     {
         return $this->_catalogSession->getPaymentData();
     }
-
 }

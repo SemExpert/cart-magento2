@@ -7,8 +7,7 @@ namespace MercadoPago\Core\Block\CustomTicket;
  * @package MercadoPago\Core\Block\CustomTicket
  */
 
-class Success
-    extends \MercadoPago\Core\Block\AbstractSuccess
+class Success extends \MercadoPago\Core\Block\AbstractSuccess
 {
     /**
      * Constructor
@@ -18,5 +17,4 @@ class Success
         parent::_construct();
         $this->setTemplate('custom_ticket/success.phtml');
     }
-
 }

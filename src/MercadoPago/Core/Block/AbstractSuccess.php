@@ -6,8 +6,7 @@ namespace MercadoPago\Core\Block;
  *
  * @package MercadoPago\Core\Block
  */
-class AbstractSuccess
-    extends \Magento\Framework\View\Element\Template
+class AbstractSuccess extends \Magento\Framework\View\Element\Template
 {
 
     /**
@@ -25,7 +24,6 @@ class AbstractSuccess
      */
     protected $_checkoutSession;
 
-
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \MercadoPago\Core\Model\CoreFactory              $coreFactory
@@ -39,8 +37,7 @@ class AbstractSuccess
         \Magento\Sales\Model\OrderFactory $orderFactory,
         \Magento\Checkout\Model\Session $checkoutSession,
         array $data = []
-    )
-    {
+    ) {
         $this->_coreFactory = $coreFactory;
         $this->_orderFactory = $orderFactory;
         $this->_checkoutSession = $checkoutSession;
@@ -132,7 +129,13 @@ class AbstractSuccess
      */
     public function getMessageByStatus($status, $status_detail, $payment_method, $amount, $installment)
     {
-        return $this->_coreFactory->create()->getMessageByStatus($status, $status_detail, $payment_method, $amount, $installment);
+        return $this->_coreFactory->create()->getMessageByStatus(
+            $status,
+            $status_detail,
+            $payment_method,
+            $amount,
+            $installment
+        );
     }
 
     /**

@@ -6,8 +6,7 @@ namespace MercadoPago\Core\Block\Custom;
  *
  * @package MercadoPago\Core\Block\Custom
  */
-class Success
-    extends \MercadoPago\Core\Block\AbstractSuccess
+class Success extends \MercadoPago\Core\Block\AbstractSuccess
 {
     /**
      * Class constructor
@@ -17,5 +16,4 @@ class Success
         parent::_construct();
         $this->setTemplate('custom/success.phtml');
     }
-
 }

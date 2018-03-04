@@ -9,8 +9,7 @@ use Magento\Sales\Model\Order;
  *
  * @package MercadoPago\Core\Block\Sales\Order\Totals
  */
-class DiscountCoupon
-    extends \Magento\Framework\View\Element\Template
+class DiscountCoupon extends \Magento\Framework\View\Element\Template
 {
 
     /**
@@ -34,7 +33,11 @@ class DiscountCoupon
     public function initTotals()
     {
         if ((float)$this->getSource()->getDiscountCouponAmount() == 0
-            || !$this->_scopeConfig->isSetFlag('payment/mercadopago/consider_discount',\Magento\Store\Model\ScopeInterface::SCOPE_STORE)) {
+            || !$this->_scopeConfig->isSetFlag(
+                'payment/mercadopago/consider_discount',
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            )
+        ) {
             return $this;
         }
         $total = new \Magento\Framework\DataObject([

@@ -489,7 +489,6 @@ class Payment extends \Magento\Payment\Model\Method\Cc implements GatewayInterfa
             $preference['token'] = $payment->getAdditionalInformation("token");
         }
 
-
         if ($payment->getAdditionalInformation("issuer_id") != "") {
             $preference['issuer_id'] = (int)$payment->getAdditionalInformation("issuer_id");
         }
@@ -499,7 +498,9 @@ class Payment extends \Magento\Payment\Model\Method\Cc implements GatewayInterfa
         }
 
         $preference['binary_mode'] = $this->_scopeConfig->isSetFlag('payment/mercadopago_custom/binary_mode');
-        $preference['statement_descriptor'] = $this->_scopeConfig->getValue('payment/mercadopago_custom/statement_descriptor');
+        $preference['statement_descriptor'] = $this->_scopeConfig->getValue(
+            'payment/mercadopago_custom/statement_descriptor'
+        );
 
         $this->_helperData->log("Credit Card -> PREFERENCE to POST /v1/payments", self::LOG_NAME, $preference);
 

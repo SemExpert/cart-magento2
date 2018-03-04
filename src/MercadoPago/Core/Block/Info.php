@@ -47,7 +47,6 @@ class Info extends \Magento\Payment\Block\Info
         ];
 
         foreach ($fields as $field) {
-
             if ($info->getAdditionalInformation($field['field']) != "") {
                 $text = $field['title'];
                 $data[$text->getText()] = $info->getAdditionalInformation($field['field']);
@@ -55,11 +54,13 @@ class Info extends \Magento\Payment\Block\Info
         };
 
         if ($info->getAdditionalInformation('payer_identification_type') != "") {
-            $text = __($info->getAdditionalInformation('payer_identification_type'), $info->getAdditionalInformation('payer_identification_number'));
+            $text = __(
+                $info->getAdditionalInformation('payer_identification_type'),
+                $info->getAdditionalInformation('payer_identification_number')
+            );
             $data[$text->getText()] = $info->getAdditionalInformation('payer_identification_number');
         }
 
         return $transport->setData(array_merge($data, $transport->getData()));
     }
-
 }

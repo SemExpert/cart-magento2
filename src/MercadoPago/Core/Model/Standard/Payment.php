@@ -9,8 +9,7 @@ namespace MercadoPago\Core\Model\Standard;
  * @SuppressWarnings(PHPMD.TooManyFields)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class Payment
-    extends \Magento\Payment\Model\Method\AbstractMethod
+class Payment extends \Magento\Payment\Model\Method\AbstractMethod
 {
     /**
      * Define payment method code
@@ -117,7 +116,7 @@ class Payment
     /**
      * @var string
      */
-    protected $_infoBlockType = 'MercadoPago\Core\Block\Info';
+    protected $_infoBlockType = \MercadoPago\Core\Block\Info::class;
 
     /**
      * @param \MercadoPago\Core\Helper\Data                                $helperData
@@ -155,8 +154,7 @@ class Payment
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct(
             $context,
             $registry,
@@ -187,8 +185,15 @@ class Payment
      */
     public function postPago()
     {
-        $client_id = $this->_scopeConfig->getValue(\MercadoPago\Core\Helper\Data::XML_PATH_CLIENT_ID, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $client_secret = $this->_scopeConfig->getValue(\MercadoPago\Core\Helper\Data::XML_PATH_CLIENT_SECRET, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $client_id = $this->_scopeConfig->getValue(
+            \MercadoPago\Core\Helper\Data::XML_PATH_CLIENT_ID,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
+
+        $client_secret = $this->_scopeConfig->getValue(
+            \MercadoPago\Core\Helper\Data::XML_PATH_CLIENT_SECRET,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
 
         $mp = $this->_helperData->getApiInstance($client_id, $client_secret);
 
@@ -200,7 +205,10 @@ class Payment
 
         if ($response['status'] == 200 || $response['status'] == 201) {
             $payment = $response['response'];
-            if ($this->_scopeConfig->getValue('payment/mercadopago_standard/sandbox_mode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE)) {
+            if ($this->_scopeConfig->getValue(
+                'payment/mercadopago_standard/sandbox_mode',
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+            ) {
                 $init_point = $payment['sandbox_init_point'];
             } else {
                 $init_point = $payment['init_point'];
@@ -266,7 +274,10 @@ class Payment
             $arr['items'][] = [
                 "title"       => "Difference amount of the items with a total",
                 "description" => "Difference amount of the items with a total",
-                "category_id" => $this->_scopeConfig->getValue('payment/mercadopago/category_id', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                "category_id" => $this->_scopeConfig->getValue(
+                    'payment/mercadopago/category_id',
+                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                ),
                 "quantity"    => 1,
                 "unit_price"  => (float)$diff_price
             ];
@@ -287,7 +298,9 @@ class Payment
         }
 
         $billingAddress = $order->getBillingAddress()->getData();
-        $arr['payer']['date_created'] = date('Y-m-d', $customer->getCreatedAtTimestamp()) . "T" . date('H:i:s', $customer->getCreatedAtTimestamp());
+        $arr['payer']['date_created'] = date('Y-m-d', $customer->getCreatedAtTimestamp()) . "T"
+            . date('H:i:s', $customer->getCreatedAtTimestamp());
+
         if (!$customer->getId()) {
             $arr['payer']['email'] = htmlentities($billingAddress['email']);
             $arr['payer']['first_name'] = htmlentities($billingAddress['firstname']);
@@ -298,7 +311,8 @@ class Payment
             $arr['payer']['last_name'] = htmlentities($customer->getLastname());
         }
 
-        if (isset($payment['additional_information']['doc_number']) && $payment['additional_information']['doc_number'] != "") {
+        if (isset($payment['additional_information']['doc_number'])
+            && $payment['additional_information']['doc_number'] != "") {
             $arr['payer']['identification'] = [
                 "type"   => "CPF",
                 "number" => $payment['additional_information']['doc_number']
@@ -307,19 +321,28 @@ class Payment
 
         $arr['payer']['address'] = [
             "zip_code"      => $billingAddress['postcode'],
-            "street_name"   => $billingAddress['street'] . " - " . $billingAddress['city'] . " - " . $billingAddress['country_id'],
+            "street_name"   => $billingAddress['street'] . " - " . $billingAddress['city'] . " - "
+                . $billingAddress['country_id'],
             "street_number" => ""
         ];
 
         $url = $this->_helperData->getSuccessUrl();
         $arr['back_urls']['success'] = $this->_urlBuilder->getUrl($url);
 
-        $typeCheckout = $this->_scopeConfig->getValue('payment/mercadopago_standard/type_checkout', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $typeCheckout = $this->_scopeConfig->getValue(
+            'payment/mercadopago_standard/type_checkout',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
+
         if ($typeCheckout == 'redirect') {
             $arr['back_urls']['pending'] = $this->_urlBuilder->getUrl($url);
-            if (!$this->_scopeConfig->getValue(\MercadoPago\Core\Helper\Data::XML_PATH_USE_SUCCESSPAGE_MP, \Magento\Store\Model\ScopeInterface::SCOPE_STORE)){
+
+            if (!$this->_scopeConfig->getValue(
+                \MercadoPago\Core\Helper\Data::XML_PATH_USE_SUCCESSPAGE_MP,
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            )) {
                 $arr['back_urls']['failure'] = $this->_urlBuilder->getUrl('checkout/onepage/failure');
-            }else{
+            } else {
                 $arr['back_urls']['failure'] = $this->_urlBuilder->getUrl('mercadopago/standard/failure');
             }
         }
@@ -335,7 +358,10 @@ class Payment
             $arr['auto_return'] = "approved";
         }
 
-        $sponsor_id = $this->_scopeConfig->getValue('payment/mercadopago/sponsor_id', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $sponsor_id = $this->_scopeConfig->getValue(
+            'payment/mercadopago/sponsor_id',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
         $this->_helperData->log("Sponsor_id", 'mercadopago-standard.log', $sponsor_id);
         if (!empty($sponsor_id)) {
             $this->_helperData->log("Sponsor_id identificado", 'mercadopago-standard.log', $sponsor_id);
@@ -345,7 +371,8 @@ class Payment
         return $arr;
     }
 
-    protected function _getParamShipment($params, $order, $shippingAddress) {
+    protected function _getParamShipment($params, $order, $shippingAddress)
+    {
         $paramsShipment = $params->getParams();
         if (empty($paramsShipment)) {
             $paramsShipment = $params->getData();
@@ -375,7 +402,10 @@ class Payment
                 "title"       => $product->getName(),
                 "description" => $product->getName(),
                 "picture_url" => $image->getUrl(),
-                "category_id" => $this->_scopeConfig->getValue('payment/mercadopago/category_id', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                "category_id" => $this->_scopeConfig->getValue(
+                    'payment/mercadopago/category_id',
+                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                ),
                 "quantity"    => (int)number_format($item->getQtyOrdered(), 0, '.', ''),
                 "unit_price"  => (float)number_format($item->getPrice(), 2, '.', '')
             ];
@@ -396,7 +426,10 @@ class Payment
             $arr[] = [
                 "title"       => "Store discount coupon",
                 "description" => "Store discount coupon",
-                "category_id" => $this->_scopeConfig->getValue('payment/mercadopago/category_id', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                "category_id" => $this->_scopeConfig->getValue(
+                    'payment/mercadopago/category_id',
+                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                ),
                 "quantity"    => 1,
                 "unit_price"  => (float)$order->getDiscountAmount()
             ];
@@ -413,7 +446,10 @@ class Payment
             $arr[] = [
                 "title"       => "Store taxes",
                 "description" => "Store taxes",
-                "category_id" => $this->_scopeConfig->getValue('payment/mercadopago/category_id', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                "category_id" => $this->_scopeConfig->getValue(
+                    'payment/mercadopago/category_id',
+                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                ),
                 "quantity"    => 1,
                 "unit_price"  => (float)$order->getBaseTaxAmount()
             ];
@@ -466,7 +502,8 @@ class Payment
         return [
             "floor"         => "-",
             "zip_code"      => $shippingAddress->getPostcode(),
-            "street_name"   => $shippingAddress->getStreet()[0] . " - " . $shippingAddress->getCity() . " - " . $shippingAddress->getCountryId(),
+            "street_name"   => $shippingAddress->getStreet()[0] . " - " . $shippingAddress->getCity() . " - "
+                . $shippingAddress->getCountryId(),
             "apartment"     => "-",
             "street_number" => ""
         ];
@@ -498,8 +535,14 @@ class Payment
     public function isAvailable(\Magento\Quote\Api\Data\CartInterface $quote = null)
     {
         $parent = parent::isAvailable($quote);
-        $clientId = $this->_scopeConfig->getValue(\MercadoPago\Core\Helper\Data::XML_PATH_CLIENT_ID, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $clientSecret = $this->_scopeConfig->getValue(\MercadoPago\Core\Helper\Data::XML_PATH_CLIENT_SECRET, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $clientId = $this->_scopeConfig->getValue(
+            \MercadoPago\Core\Helper\Data::XML_PATH_CLIENT_ID,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
+        $clientSecret = $this->_scopeConfig->getValue(
+            \MercadoPago\Core\Helper\Data::XML_PATH_CLIENT_SECRET,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
         $standard = (!empty($clientId) && !empty($clientSecret));
 
         if (!$parent || !$standard) {
@@ -507,7 +550,6 @@ class Payment
         }
 
         return $this->_helperData->isValidClientCredentials($clientId, $clientSecret);
-
     }
 
     /**
@@ -521,5 +563,4 @@ class Payment
 
         return $this->_urlBuilder->getUrl($url, ['_secure' => true]);
     }
-
 }

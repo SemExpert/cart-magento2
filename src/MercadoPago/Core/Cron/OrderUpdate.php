@@ -40,8 +40,7 @@ class OrderUpdate
         \MercadoPago\Core\Model\Core $core,
         \Magento\Framework\Event\ManagerInterface $eventManager,
         array $data = []
-    )
-    {
+    ) {
         $this->_scopeConfig = $scopeConfig;
         $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->_statusHelper = $statusUpdate;
@@ -50,8 +49,9 @@ class OrderUpdate
         $this->_eventManager = $eventManager;
     }
 
-    public function execute(){
-       $hours = $this->_scopeConfig->getValue('payment/mercadopago/number_of_hours');
+    public function execute()
+    {
+        $hours = $this->_scopeConfig->getValue('payment/mercadopago/number_of_hours');
 
         // filter to date:
         $fromDate = date('Y-m-d H:i:s', strtotime('-'.$hours. ' hours'));
@@ -64,12 +64,12 @@ class OrderUpdate
                 'main_table.entity_id=payment.parent_id',
                 ['payment_method' => 'payment.method']
             )
-            ->addFieldToFilter('status' ,["nin" => ['canceled','complete']])
+            ->addFieldToFilter('status', ["nin" => ['canceled', 'complete']])
             ->addFieldToFilter('created_at', ['from'=>$fromDate, 'to'=>$toDate])
         ;
 
         // For all Orders to analyze
-        foreach($collection as $orderByPayment){
+        foreach ($collection as $orderByPayment) {
             $order = $orderByPayment;
             $paymentOrder = $order->getPayment();
             $infoPayments = $paymentOrder->getAdditionalInformation();
@@ -78,10 +78,9 @@ class OrderUpdate
 
             $order->canCreditmemo();
 
-            if ($method == "mercadopago_custom" || $method == "mercadopago_customticket" || $method == "mercadopago_standard"){
-
+            if ($method == "mercadopago_custom" || $method == "mercadopago_customticket"
+                || $method == "mercadopago_standard") {
                 if (isset($infoPayments['merchant_order_id']) && $order->getStatus() !== 'complete') {
-
                     $merchantOrderId =  $infoPayments['merchant_order_id'];
 
                     $response = $this->_core->getMerchantOrder($merchantOrderId);
@@ -93,7 +92,11 @@ class OrderUpdate
                         $statusFinal = $this->_statusHelper->getStatusFinal($paymentData['status'], $merchantOrderData);
                         $statusDetail = $infoPayments['status_detail'];
 
-                        $statusOrder = $this->_statusHelper->getStatusOrder($statusFinal, $statusDetail, $order->canCreditmemo());
+                        $statusOrder = $this->_statusHelper->getStatusOrder(
+                            $statusFinal,
+                            $statusDetail,
+                            $order->canCreditmemo()
+                        );
 
                         $shipmentData = $this->_statusHelper->getShipmentsArray($merchantOrderData);
 
@@ -109,14 +112,20 @@ class OrderUpdate
                             if ((!empty($shipmentData) && !empty($merchantOrderData))) {
                                 $this->_eventManager->dispatch(
                                     'mercadopago_standard_notification_before_set_status',
-                                    ['shipmentData' => $shipmentData, 'orderId' => $merchantOrderData['external_reference']]
+                                    [
+                                        'shipmentData' => $shipmentData,
+                                        'orderId' => $merchantOrderData['external_reference']
+                                    ]
                                 );
                             }
 
                             $this->_updateOrder($order, $statusOrder, $paymentOrder);
                         }
-                    } else{
-                        $this->_helper->log('Error updating status order using cron whit the merchantOrder num: '. $merchantOrderId .'mercadopago.log');
+                    } else {
+                        $this->_helper->log(
+                            'Error updating status order using cron whit the merchantOrder num: ' . $merchantOrderId
+                            . 'mercadopago.log'
+                        );
                     }
                 }
             }
@@ -128,7 +137,8 @@ class OrderUpdate
      * @param $statusOrder
      * @param $paymentOrder
      */
-    protected function _updateOrder($order, $statusOrder, $paymentOrder){
+    protected function _updateOrder($order, $statusOrder, $paymentOrder)
+    {
         $order->setState($this->_statusHelper->_getAssignedState($statusOrder));
         $order->addStatusToHistory($statusOrder, $this->_statusHelper->getMessage($statusOrder, $statusOrder), true);
         $order->sendOrderUpdateEmail(true, $this->_statusHelper->getMessage($statusOrder, $paymentOrder));
@@ -137,7 +147,7 @@ class OrderUpdate
 
     protected function getDataPayments($merchantOrderData)
     {
-        $data = array();
+        $data = [];
         foreach ($merchantOrderData['payments'] as $payment) {
             $data = $this->getFormattedPaymentData($payment['id'], $data);
         }
@@ -155,5 +165,4 @@ class OrderUpdate
 
         return $this->_statusHelper->formatArrayPayment($data, $payment, self::LOG_FILE);
     }
-
 }

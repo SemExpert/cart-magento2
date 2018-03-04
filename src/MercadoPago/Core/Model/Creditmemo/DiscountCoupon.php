@@ -6,8 +6,7 @@ namespace MercadoPago\Core\Model\Creditmemo;
  *
  * @package MercadoPago\Core\Model\Creditmemo
  */
-class DiscountCoupon
-    extends \Magento\Sales\Model\Order\Total\AbstractTotal
+class DiscountCoupon extends \Magento\Sales\Model\Order\Total\AbstractTotal
 {
     /**
      * @param \Magento\Sales\Model\Order\Creditmemo $creditmemo

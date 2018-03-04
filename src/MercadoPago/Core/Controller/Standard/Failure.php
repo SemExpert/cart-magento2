@@ -6,8 +6,7 @@ namespace MercadoPago\Core\Controller\Standard;
  *
  * @package MercadoPago\Core\Controller\Standard
  */
-class Failure
-    extends \Magento\Framework\App\Action\Action
+class Failure extends \Magento\Framework\App\Action\Action
 {
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
@@ -29,8 +28,7 @@ class Failure
         \Magento\Sales\Model\OrderFactory $orderFactory,
         \MercadoPago\Core\Helper\Data $helperData,
         \Magento\Catalog\Model\Session $catalogSession
-    )
-    {
+    ) {
 
         $this->_scopeConfig = $scopeConfig;
         $this->_checkoutSession = $checkoutSession;
@@ -41,7 +39,6 @@ class Failure
         parent::__construct(
             $context
         );
-
     }
 
     /**
@@ -60,19 +57,23 @@ class Failure
      */
     public function execute()
     {
-        if (!$this->_scopeConfig->getValue(\MercadoPago\Core\Helper\Data::XML_PATH_USE_SUCCESSPAGE_MP, \Magento\Store\Model\ScopeInterface::SCOPE_STORE)){
+        if (!$this->_scopeConfig->getValue(
+            \MercadoPago\Core\Helper\Data::XML_PATH_USE_SUCCESSPAGE_MP,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+        ) {
             $this->_view->loadLayout(['default', 'checkout_onepage_failure']);
-
         } else {
             //set data for mp analytics
             $this->_catalogSession->setPaymentData($this->_helperData->getAnalyticsData($this->_getOrder()));
 
-            $typeCheckout = $this->_scopeConfig->getValue('payment/mercadopago_standard/type_checkout', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            $typeCheckout = $this->_scopeConfig->getValue(
+                'payment/mercadopago_standard/type_checkout',
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            );
 
             $this->_view->loadLayout(['default', 'mercadopago_standard_failure_' . $typeCheckout]);
 
         }
         $this->_view->renderLayout();
     }
-
 }

@@ -24,7 +24,6 @@ class AddMpSubtotalsToOrderObserver implements ObserverInterface
         $financeCost = $quote->getShippingAddress()->getFinanceCostAmount();
         $baseFinanceCost = $quote->getShippingAddress()->getBaseFinanceCostAmount();
 
-
         if (!empty($discountCoupon)) {
             $order->setDiscountCouponAmount($discountCoupon);
             $order->setBaseDiscountCouponAmount($baseDiscountCoupon);
@@ -35,7 +34,7 @@ class AddMpSubtotalsToOrderObserver implements ObserverInterface
             $order->setBaseFinanceCostAmount($baseFinanceCost);
         }
 
-        if($order->getPayment()->getMethod() == "mercadopago_standard"){
+        if ($order->getPayment()->getMethod() == "mercadopago_standard") {
             $order->setFinanceCostAmount(0);
             $order->setBaseFinanceCostAmount(0);
         }
