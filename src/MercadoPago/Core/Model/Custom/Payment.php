@@ -12,9 +12,7 @@ use Magento\Payment\Model\Method\ConfigInterface;
  * @SuppressWarnings(PHPMD.TooManyFields)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class Payment
-    extends \Magento\Payment\Model\Method\Cc
-    implements GatewayInterface
+class Payment extends \Magento\Payment\Model\Method\Cc implements GatewayInterface
 {
     /**
      * Define payment method code
@@ -172,12 +170,19 @@ class Payment
     /**
      * @var array
      */
-    public static $_excludeInputsOpc = ['issuer_id', 'card_expiration_month', 'card_expiration_year', 'card_holder_name', 'doc_type', 'doc_number'];
+    public static $_excludeInputsOpc = [
+        'issuer_id',
+        'card_expiration_month',
+        'card_expiration_year',
+        'card_holder_name',
+        'doc_type',
+        'doc_number'
+    ];
 
     /**
      * @var string
      */
-    protected $_infoBlockType = 'MercadoPago\Core\Block\Info';
+    protected $_infoBlockType = \MercadoPago\Core\Block\Info::class;
 
     /**
      * Request object
@@ -222,8 +227,8 @@ class Payment
         \Magento\Framework\Module\ModuleListInterface $moduleList,
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate,
         \MercadoPago\Core\Model\Core $coreModel,
-        \Magento\Framework\App\RequestInterface $request)
-    {
+        \Magento\Framework\App\RequestInterface $request
+    ) {
         parent::__construct(
             $context,
             $registry,
@@ -243,7 +248,6 @@ class Payment
         $this->_orderFactory = $orderFactory;
         $this->_urlBuilder = $urlBuilder;
         $this->_request = $request;
-
     }
 
     /**
@@ -275,13 +279,23 @@ class Payment
 
         if (!empty($infoInstance->getAdditionalInformation('second_card_token'))) {
             $usingSecondCardInfo['first_card']['amount'] = $infoInstance->getAdditionalInformation('first_card_amount');
-            $usingSecondCardInfo['first_card']['installments'] = $infoInstance->getAdditionalInformation('installments');
-            $usingSecondCardInfo['first_card']['payment_method_id'] = $infoInstance->getAdditionalInformation('payment_method');
+            $usingSecondCardInfo['first_card']['installments'] = $infoInstance->getAdditionalInformation(
+                'installments'
+            );
+            $usingSecondCardInfo['first_card']['payment_method_id'] = $infoInstance->getAdditionalInformation(
+                'payment_method'
+            );
             $usingSecondCardInfo['first_card']['token'] = $infoInstance->getAdditionalInformation('token');
 
-            $usingSecondCardInfo['second_card']['amount'] = $infoInstance->getAdditionalInformation('second_card_amount');
-            $usingSecondCardInfo['second_card']['installments'] = $infoInstance->getAdditionalInformation('second_card_installments');
-            $usingSecondCardInfo['second_card']['payment_method_id'] = $infoInstance->getAdditionalInformation('second_card_payment_method_id');
+            $usingSecondCardInfo['second_card']['amount'] = $infoInstance->getAdditionalInformation(
+                'second_card_amount'
+            );
+            $usingSecondCardInfo['second_card']['installments'] = $infoInstance->getAdditionalInformation(
+                'second_card_installments'
+            );
+            $usingSecondCardInfo['second_card']['payment_method_id'] = $infoInstance->getAdditionalInformation(
+                'second_card_payment_method_id'
+            );
             $usingSecondCardInfo['second_card']['token'] = $infoInstance->getAdditionalInformation('second_card_token');
 
             $responseFirstCard = $this->preparePostPayment($usingSecondCardInfo['first_card']);
@@ -296,18 +310,28 @@ class Payment
                 if (isset($responseSecondCard) && ($responseSecondCard['response']['status'] == 'approved')) {
                     $paymentSecondCard = $responseSecondCard['response'];
                     $additionalInfo = [
-                        'status'                       => $paymentFirstCard['status'] . ' | ' . $paymentSecondCard['status'],
+                        'status'                       => $paymentFirstCard['status'] . ' | '
+                            . $paymentSecondCard['status'],
                         'payment_id_detail'            => $paymentFirstCard['id'] . ' | ' . $paymentSecondCard['id'],
-                        'status_detail'                => $paymentFirstCard['status_detail'] . ' | ' . $paymentSecondCard['status_detail'],
-                        'installments'                 => $paymentFirstCard['installments'] . ' | ' . $paymentSecondCard['installments'],
-                        'payment_method'               => $paymentFirstCard['payment_method_id'] . ' | ' . $paymentSecondCard['payment_method_id'],
+                        'status_detail'                => $paymentFirstCard['status_detail'] . ' | '
+                            . $paymentSecondCard['status_detail'],
+                        'installments'                 => $paymentFirstCard['installments'] . ' | '
+                            . $paymentSecondCard['installments'],
+                        'payment_method'               => $paymentFirstCard['payment_method_id'] . ' | '
+                            . $paymentSecondCard['payment_method_id'],
                         'first_payment_id'             => $paymentFirstCard['id'] . ' | ' . $paymentSecondCard['id'],
-                        'first_payment_status'         => $paymentFirstCard['status'] . ' | ' . $paymentSecondCard['status'],
-                        'first_payment_status_detail'  => $paymentFirstCard['status_detail'] . ' | ' . $paymentSecondCard['status_detail'],
-                        'total_paid_amount'            => $paymentFirstCard['transaction_details']['total_paid_amount'] . '|' . $paymentSecondCard['transaction_details']['total_paid_amount'],
-                        'transaction_amount'           => $paymentFirstCard['transaction_amount'] . '|' . $paymentSecondCard['transaction_amount'],
-                        'payer_identification_type'    => $paymentFirstCard['payer']['identification']['type']. '|' . $paymentSecondCard['payer']['identification']['type'],
-                        'payer_identification_number'  => $paymentFirstCard['payer']['identification']['number'] . '|' . $paymentSecondCard['payer']['identification']['number']
+                        'first_payment_status'         => $paymentFirstCard['status'] . ' | '
+                            . $paymentSecondCard['status'],
+                        'first_payment_status_detail'  => $paymentFirstCard['status_detail'] . ' | '
+                            . $paymentSecondCard['status_detail'],
+                        'total_paid_amount'            => $paymentFirstCard['transaction_details']['total_paid_amount']
+                            . '|' . $paymentSecondCard['transaction_details']['total_paid_amount'],
+                        'transaction_amount'           => $paymentFirstCard['transaction_amount'] . '|'
+                            . $paymentSecondCard['transaction_amount'],
+                        'payer_identification_type'    => $paymentFirstCard['payer']['identification']['type']. '|'
+                            . $paymentSecondCard['payer']['identification']['type'],
+                        'payer_identification_number'  => $paymentFirstCard['payer']['identification']['number'] . '|'
+                            . $paymentSecondCard['payer']['identification']['number']
                     ];
 
                     foreach ($additionalInfo as $infoKey => $infoValue) {
@@ -317,7 +341,10 @@ class Payment
                     return true;
                 } else {
                     //second card payment failed, refund for first card
-                    $accessToken = $this->_scopeConfig->getValue(\MercadoPago\Core\Helper\Data::XML_PATH_ACCESS_TOKEN, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+                    $accessToken = $this->_scopeConfig->getValue(
+                        \MercadoPago\Core\Helper\Data::XML_PATH_ACCESS_TOKEN,
+                        \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                    );
                     $apiInstance = $this->_helperData->getApiInstance($accessToken);
                     $id = $paymentFirstCard['id'];
                     $refundResponse = $apiInstance->post("/v1/payments/$id/refunds?access_token=$accessToken", null);
@@ -328,8 +355,6 @@ class Payment
             } else {
                 return false;
             }
-
-
         } else {
             $response = $this->preparePostPayment();
 
@@ -352,7 +377,6 @@ class Payment
         }
 
         return false;
-
 
 //        if ($this->getInfoInstance()->getAdditionalInformation('token') == "") {
 //            throw new \Exception(__('Verify the form data or wait until the validation of the payment data'));
@@ -408,7 +432,10 @@ class Payment
 
         if (empty($infoForm['token'])) {
             $e = "";
-            $exception = new \MercadoPago\Core\Model\Api\V1\Exception(new \Magento\Framework\Phrase($e), $this->_scopeConfig);
+            $exception = new \MercadoPago\Core\Model\Api\V1\Exception(
+                new \Magento\Framework\Phrase($e),
+                $this->_scopeConfig
+            );
             $e = $exception->getUserMessage();
             $exception->setPhrase(new \Magento\Framework\Phrase($e));
             throw $exception;
@@ -419,7 +446,10 @@ class Payment
         $info->setAdditionalInformation($infoForm);
         $info->setAdditionalInformation('payment_type_id', "credit_card");
         if (!empty($infoForm['card_expiration_month']) && !empty($infoForm['card_expiration_year'])) {
-            $info->setAdditionalInformation('expiration_date', $infoForm['card_expiration_month'] . "/" . $infoForm['card_expiration_year']);
+            $info->setAdditionalInformation(
+                'expiration_date',
+                $infoForm['card_expiration_month'] . "/" . $infoForm['card_expiration_year']
+            );
         }
         $info->setAdditionalInformation('payment_method', $infoForm['payment_method_id']);
         $info->setAdditionalInformation('cardholderName', $infoForm['card_holder_name']);
@@ -479,7 +509,6 @@ class Payment
         return $response;
     }
 
-
     /**
      * Retrieves quote
      *
@@ -489,7 +518,6 @@ class Payment
     {
         return $this->_checkoutSession->getQuote();
     }
-
 
     /**
      * Retrieves Order
@@ -525,17 +553,26 @@ class Payment
     {
         $parent = parent::isAvailable($quote);
         if (!$this->_accessToken) {
-            $this->_accessToken = $this->_scopeConfig->getValue(\MercadoPago\Core\Helper\Data::XML_PATH_ACCESS_TOKEN, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            $this->_accessToken = $this->_scopeConfig->getValue(
+                \MercadoPago\Core\Helper\Data::XML_PATH_ACCESS_TOKEN,
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            );
         }
         if (!$this->_publicKey) {
-            $this->_publicKey = $this->_scopeConfig->getValue(\MercadoPago\Core\Helper\Data::XML_PATH_PUBLIC_KEY, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            $this->_publicKey = $this->_scopeConfig->getValue(
+                \MercadoPago\Core\Helper\Data::XML_PATH_PUBLIC_KEY,
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            );
         }
         $custom = (!empty($this->_publicKey) && !empty($this->_accessToken));
         if (!$parent || !$custom) {
             return false;
         }
 
-        $debugMode = $this->_scopeConfig->getValue('payment/mercadopago/debug_mode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $debugMode = $this->_scopeConfig->getValue(
+            'payment/mercadopago/debug_mode',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
         $secure = $this->_request->isSecure();
         if (!$secure && !$debugMode) {
             return false;
@@ -589,8 +626,6 @@ class Payment
         $mp = $this->_helperData->getApiInstance($accessToken);
 
         foreach ($customer['cards'] as $card) {
-
-
             if ($card['first_six_digits'] == $payment['card']['first_six_digits']
                 && $card['last_four_digits'] == $payment['card']['last_four_digits']
                 && $card['expiration_month'] == $payment['card']['expiration_month']
@@ -634,7 +669,10 @@ class Payment
         }
         //get access_token
         if (!$this->_accessToken) {
-            $this->_accessToken = $this->_scopeConfig->getValue(\MercadoPago\Core\Helper\Data::XML_PATH_ACCESS_TOKEN, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            $this->_accessToken = $this->_scopeConfig->getValue(
+                \MercadoPago\Core\Helper\Data::XML_PATH_ACCESS_TOKEN,
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            );
         }
 
         $mp = $this->_helperData->getApiInstance($this->_accessToken);
@@ -644,7 +682,6 @@ class Payment
         $this->_helperData->log("Response search customer", self::LOG_NAME, $customer);
 
         if ($customer['status'] == 200) {
-
             if ($customer['response']['paging']['total'] > 0) {
                 return $customer['response']['results'][0];
             } else {
@@ -701,5 +738,4 @@ class Payment
 
         return $payment_info;
     }
-
 }
