@@ -21,7 +21,7 @@ class RestClient
      * @param array $extra_params
      *
      * @return resource
-     * @throws Exception
+     * @throws \Exception
      */
     private static function getConnect($uri, $method, $content_type, $extra_params = [])
     {
@@ -53,7 +53,7 @@ class RestClient
      * @param $data
      * @param $content_type
      *
-     * @throws Exception
+     * @throws \Exception
      */
     private static function setData(&$connect, $data, $content_type)
     {
@@ -83,7 +83,7 @@ class RestClient
      * @param $extra_params
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     private static function exec($method, $uri, $data, $content_type, $extra_params)
     {
@@ -115,7 +115,7 @@ class RestClient
      * @param array  $extra_params
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     public static function get($uri, $content_type = "application/json", $extra_params = [])
     {
@@ -129,7 +129,7 @@ class RestClient
      * @param array  $extra_params
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     public static function post($uri, $data, $content_type = "application/json", $extra_params = [])
     {
@@ -143,7 +143,7 @@ class RestClient
      * @param array  $extra_params
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     public static function put($uri, $data, $content_type = "application/json", $extra_params = [])
     {
@@ -156,7 +156,7 @@ class RestClient
      * @param array  $extra_params
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     public static function delete($uri, $content_type = "application/json", $extra_params = [])
     {

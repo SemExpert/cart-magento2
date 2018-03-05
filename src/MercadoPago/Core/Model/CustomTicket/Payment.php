@@ -70,11 +70,10 @@ class Payment extends \MercadoPago\Core\Model\Custom\Payment
      * @param \Magento\Framework\DataObject|mixed $data
      *
      * @return $this
-     * @throws LocalizedException
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function assignData(\Magento\Framework\DataObject $data)
     {
-
         // route /checkout/onepage/savePayment
         if (!($data instanceof \Magento\Framework\DataObject)) {
             $data = new \Magento\Framework\DataObject($data);
