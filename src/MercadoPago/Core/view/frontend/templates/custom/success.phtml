@@ -7,7 +7,8 @@
     $payment = $this->getPayment();
     
     //monta link para o pedido
-    $link_to_order = '<a href="' . $block->escapeUrl($this->getOrderUrl()) . '">' . $block->escapeHtml($order->getIncrementId()) . '</a>';
+    $link_to_order = '<a href="' . $block->escapeUrl($this->getOrderUrl()) . '">'
+        . $block->escapeHtml($order->getIncrementId()) . '</a>';
     $successMsg = 'Your order %1 has been successfully generated.';
     
     $payment_method = $this->getPaymentMethod();
@@ -16,29 +17,29 @@
 
 <div id="box-mercadopago">
 
-    <?php if(!isset($info_payment['status']['value'])): ?>
-        <h2 class="mercadopago-title"><?php /* @escapeNotVerified */ echo __('Thank you for your purchase!'); ?></h2>
-        <p><?php /* @escapeNotVerified */ echo __($successMsg, $link_to_order); ?></p>
-    <?php else: ?>
+    <?php if (!isset($info_payment['status']['value'])) : ?>
+        <h2 class="mercadopago-title"><?= /* @escapeNotVerified */ __('Thank you for your purchase!'); ?></h2>
+        <p><?= /* @escapeNotVerified */ __($successMsg, $link_to_order); ?></p>
+    <?php else : ?>
         <?php
             $message_status = $this->getMessageByStatus(
                 $info_payment['status']['value'],
                 $info_payment['status_detail']['value'],
                 (isset($info_payment['payment_method']['value'])) ? $info_payment['payment_method']['value'] : '',
-                (isset($info_payment['installment']['value'])) ? $info_payment['installment']['value'] : '' ,
+                (isset($info_payment['installment']['value'])) ? $info_payment['installment']['value'] : '',
                 $this->getTotal()
             );
         ?>
-        <h2 class="mercadopago-title"><?php echo $block->escapeHtml($message_status['title']); ?></h2>
+        <h2 class="mercadopago-title"><?= $block->escapeHtml($message_status['title']); ?></h2>
 
-        <p><?php echo $block->escapeHtml($message_status['message']); ?></p>
+        <p><?= $block->escapeHtml($message_status['message']); ?></p>
 
-        <p><?php /* @escapeNotVerified */ echo __($successMsg, $link_to_order); ?></p>
+        <p><?= /* @escapeNotVerified */ __($successMsg, $link_to_order); ?></p>
 
-        <h3 class="mercadopago-title-info-payment"><?php /* @escapeNotVerified */ echo __('Payment information'); ?></h3>
+        <h3 class="mercadopago-title-info-payment"><?= /* @escapeNotVerified */ __('Payment information'); ?></h3>
 
-        <?php foreach($info_payment as $info): ?>
-            <p><?php /* @escapeNotVerified */ echo __($info['text']); ?></p>
+        <?php foreach ($info_payment as $info) : ?>
+            <p><?= /* @escapeNotVerified */ __($info['text']); ?></p>
         <?php endforeach; ?>
             
     <?php endif; ?>
@@ -50,6 +51,8 @@
 
 
 <div class="primary button-success">
-    <a class="action primary continue" href="<?php echo $block->escapeUrl($block->getUrl()) ?>"><span><?php /* @escapeNotVerified */ echo __('Continue Shopping') ?></span></a>
+    <a class="action primary continue" href="<?= $block->escapeUrl($block->getUrl()) ?>">
+        <span><?= /* @escapeNotVerified */ __('Continue Shopping') ?></span>
+    </a>
 </div>
 

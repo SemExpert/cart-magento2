@@ -91,9 +91,11 @@ class CustomTicketConfigProvider implements ConfigProviderInterface
                 $this->methodCode => [
                     'bannerUrl'       => $this->methodInstance->getConfigData('banner_checkout'),
                     'options'         => $this->methodInstance->getTicketsOptions(),
-                    'country'         => strtoupper($this->_scopeConfig->getValue(
-                        'payment/mercadopago/country',
-                        \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                    'country'         => strtoupper(
+                        $this->_scopeConfig->getValue(
+                            'payment/mercadopago/country',
+                            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                        )
                     ),
                     'grand_total'     => $this->_checkoutSession->getQuote()->getGrandTotal(),
                     'success_url'     => $this->methodInstance->getConfigData('order_place_redirect_url'),

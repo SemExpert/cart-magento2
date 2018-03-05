@@ -492,7 +492,7 @@ class Core extends \Magento\Payment\Model\Method\AbstractMethod
 
         // Check if notification URL contains localhost
         $notification_url = $this->_urlBuilder->getUrl('mercadopago/notifications/custom');
-        if (isset( $notification_url)) {
+        if (isset($notification_url)) {
             $preference['notification_url'] = $notification_url;
         }
 

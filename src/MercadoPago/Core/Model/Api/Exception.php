@@ -46,8 +46,8 @@ class Exception extends \Magento\Framework\Exception\LocalizedException
         if (!empty($error)) {
             if ($this->_scopeConfig->isSetFlag(
                 'payment/mercadopago/debug_mode',
-                \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE)
-            ) {
+                \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE
+            )) {
                 return $error['description'];
             } else {
                 $code = $error['code'];

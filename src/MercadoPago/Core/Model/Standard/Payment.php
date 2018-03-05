@@ -207,8 +207,8 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod
             $payment = $response['response'];
             if ($this->_scopeConfig->getValue(
                 'payment/mercadopago_standard/sandbox_mode',
-                \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            ) {
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            )) {
                 $init_point = $payment['sandbox_init_point'];
             } else {
                 $init_point = $payment['init_point'];

@@ -105,7 +105,8 @@ class Custom extends \Magento\Framework\App\Action\Action
         }
         $this->coreHelper->log(
             \MercadoPago\Core\Helper\Response::INFO_EXTERNAL_REFERENCE_NOT_FOUND,
-            self::LOG_NAME, $this->_requestData->getParams()
+            self::LOG_NAME,
+            $this->_requestData->getParams()
         );
         $this->getResponse()->getBody(\MercadoPago\Core\Helper\Response::INFO_EXTERNAL_REFERENCE_NOT_FOUND);
         $this->getResponse()->setHttpResponseCode(\MercadoPago\Core\Helper\Response::HTTP_NOT_FOUND);
