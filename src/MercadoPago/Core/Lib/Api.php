@@ -78,7 +78,7 @@ class Api
      */
     public function sandbox_mode($enable = null) // @codingStandardsIgnoreLine
     {
-        if (!is_null($enable)) {
+        if (isset($enable)) {
             $this->sandbox = $enable === true;
         }
 
@@ -93,7 +93,7 @@ class Api
      */
     public function get_access_token() // @codingStandardsIgnoreLine
     {
-        if (isset($this->ll_access_token) && !is_null($this->ll_access_token)) {
+        if (isset($this->ll_access_token)) {
             return $this->ll_access_token;
         }
 
@@ -229,7 +229,7 @@ class Api
      * @param int $limit
      * @return array(json)
      */
-    public function search_payment($filters, $offset = 0, $limit = 0)
+    public function search_payment($filters, $offset = 0, $limit = 0) // @codingStandardsIgnoreLine
     {
         $access_token = $this->get_access_token();
 
@@ -251,7 +251,7 @@ class Api
      * @param array $preference
      * @return array(json)
      */
-    public function create_preference($preference)
+    public function create_preference($preference) // @codingStandardsIgnoreLine
     {
         $access_token = $this->get_access_token();
 
@@ -271,7 +271,7 @@ class Api
      * @param array $preference
      * @return array(json)
      */
-    public function update_preference($id, $preference)
+    public function update_preference($id, $preference) // @codingStandardsIgnoreLine
     {
         $access_token = $this->get_access_token();
 
@@ -287,7 +287,7 @@ class Api
      * @param string $id
      * @return array(json)
      */
-    public function get_preference($id)
+    public function get_preference($id) // @codingStandardsIgnoreLine
     {
         $access_token = $this->get_access_token();
 
@@ -302,7 +302,7 @@ class Api
      * @param array $preapproval_payment
      * @return array(json)
      */
-    public function create_preapproval_payment($preapproval_payment)
+    public function create_preapproval_payment($preapproval_payment) // @codingStandardsIgnoreLine
     {
         $access_token = $this->get_access_token();
 
@@ -318,7 +318,7 @@ class Api
      * @param string $id
      * @return array(json)
      */
-    public function get_preapproval_payment($id)
+    public function get_preapproval_payment($id) // @codingStandardsIgnoreLine
     {
         $access_token = $this->get_access_token();
 
@@ -334,7 +334,7 @@ class Api
      * @return array(json)
      */
 
-    public function update_preapproval_payment($id, $preapproval_payment)
+    public function update_preapproval_payment($id, $preapproval_payment) // @codingStandardsIgnoreLine
     {
         $access_token = $this->get_access_token();
 
@@ -350,7 +350,7 @@ class Api
      * @param array $preference
      * @return array(json)
      */
-    public function create_custon_payment($info)
+    public function create_custon_payment($info) // @codingStandardsIgnoreLine
     {
         $access_token = $this->get_access_token();
 
@@ -463,7 +463,7 @@ class Api
      *
      * @return string
      */
-    private function build_query($params)
+    private function build_query($params) // @codingStandardsIgnoreLine
     {
         if (function_exists("http_build_query")) {
             return http_build_query($params, "", "&");
@@ -480,7 +480,7 @@ class Api
     /**
      * @param null $platform
      */
-    public function set_platform($platform)
+    public function set_platform($platform) // @codingStandardsIgnoreLine
     {
         $this->_platform = $platform;
     }
@@ -488,7 +488,7 @@ class Api
     /**
      * @param null $so
      */
-    public function set_so($so = '')
+    public function set_so($so = '') // @codingStandardsIgnoreLine
     {
         $this->_so = $so;
     }
@@ -496,7 +496,7 @@ class Api
     /**
      * @param null $type
      */
-    public function set_type($type)
+    public function set_type($type) // @codingStandardsIgnoreLine
     {
         $this->_type = $type;
     }

@@ -1,6 +1,7 @@
 <?php
 
 namespace MercadoPago\Core\Plugin;
+
 /**
  * Class MinificationIsExcludedPlugin
  *
@@ -12,8 +13,11 @@ class MinificationIsExcludedPlugin
     {
     }
 
-    public function aroundGetExcludes(\Magento\Framework\View\Asset\Minification $minification, callable $proceed, $contentType)
-    {
+    public function aroundGetExcludes(
+        \Magento\Framework\View\Asset\Minification $minification,
+        callable $proceed,
+        $contentType
+    ) {
         $returnValue = $proceed($contentType);
         if ($contentType == 'js') {
             $returnValue[] = 'mercadopago.js';

@@ -3,6 +3,7 @@
 namespace MercadoPago\MercadoEnvios\Model\Carrier;
 
 use Magento\Quote\Model\Quote\Address\RateRequest;
+use Magento\Shipping\Model\Carrier\CarrierInterface;
 use Magento\Shipping\Model\Rate\Result;
 
 /**
@@ -10,10 +11,7 @@ use Magento\Shipping\Model\Rate\Result;
  *
  * @package MercadoPago\MercadoEnvios\Model\Carrier
  */
-class MercadoEnvios
-    extends \Magento\Shipping\Model\Carrier\AbstractCarrier
-    implements
-    \Magento\Shipping\Model\Carrier\CarrierInterface
+class MercadoEnvios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements CarrierInterface
 {
     /**
      *
@@ -69,7 +67,6 @@ class MercadoEnvios
 
     protected $_registry;
 
-
     /**
      * MercadoEnvios constructor.
      *
@@ -94,8 +91,7 @@ class MercadoEnvios
         \Magento\Framework\Registry $registry,
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timeZone,
         array $data = []
-    )
-    {
+    ) {
         $this->_rateResultFactory = $rateResultFactory;
         $this->_rateMethodFactory = $rateMethodFactory;
         $this->_helperCarrierData = $helperCarrierData;
@@ -109,7 +105,7 @@ class MercadoEnvios
      * @return int|null
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function _getDataAllowedMethods()
+    protected function _getDataAllowedMethods() // @codingStandardsIgnoreLine
     {
         if (empty($this->_methods) && !empty($this->_request)) {
             $quote = $this->_helperCarrierData->getQuote();
@@ -121,15 +117,23 @@ class MercadoEnvios
             $postcode = $shippingAddress->getPostcode();
 
             try {
-                $dimensions = $this->_helperCarrierData->getDimensions($this->_helperCarrierData->getAllItems($this->_request->getAllItems()));
+                $dimensions = $this->_helperCarrierData->getDimensions(
+                    $this->_helperCarrierData->getAllItems($this->_request->getAllItems())
+                );
             } catch (\Exception $e) {
                 $this->_methods = self::INVALID_METHOD;
 
                 return null;
             }
 
-            $clientId = $this->_scopeConfig->getValue(\MercadoPago\Core\Helper\Data::XML_PATH_CLIENT_ID, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-            $clientSecret = $this->_scopeConfig->getValue(\MercadoPago\Core\Helper\Data::XML_PATH_CLIENT_SECRET, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            $clientId = $this->_scopeConfig->getValue(
+                \MercadoPago\Core\Helper\Data::XML_PATH_CLIENT_ID,
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            );
+            $clientSecret = $this->_scopeConfig->getValue(
+                \MercadoPago\Core\Helper\Data::XML_PATH_CLIENT_SECRET,
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            );
 
             $mp = $this->_mpHelper->getApiInstance($clientId, $clientSecret);
 
@@ -229,7 +233,7 @@ class MercadoEnvios
      *
      * @return \Magento\Quote\Model\Quote\Address\RateResult\Error|\Magento\Quote\Model\Quote\Address\RateResult\Method
      */
-    protected function _getRate($methodId)
+    protected function _getRate($methodId) // @codingStandardsIgnoreLine
     {
         if ($methodId == self::INVALID_METHOD) {
             return $this->_getErrorRate();
@@ -258,7 +262,7 @@ class MercadoEnvios
     /**
      * @return \Magento\Quote\Model\Quote\Address\RateResult\Error
      */
-    protected function _getErrorRate()
+    protected function _getErrorRate() // @codingStandardsIgnoreLine
     {
         /** @var \Magento\Quote\Model\Quote\Address\RateResult\Error $error */
         $error = $this->_rateErrorFactory->create();
@@ -279,7 +283,7 @@ class MercadoEnvios
      *
      * @return string
      */
-    protected function _getEstimatedDate($dataTime)
+    protected function _getEstimatedDate($dataTime) // @codingStandardsIgnoreLine
     {
         $current = new \Zend_Date();
         $current->setTime(0);
@@ -293,7 +297,7 @@ class MercadoEnvios
      *
      * @return bool
      */
-    protected function _isAvailableRate($rateId)
+    protected function _isAvailableRate($rateId) // @codingStandardsIgnoreLine
     {
         if (empty($this->_available)) {
             $this->_available = explode(',', $this->_scopeConfig->getValue('carriers/mercadoenvios/availablemethods', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
@@ -324,5 +328,4 @@ class MercadoEnvios
     {
         return true;
     }
-
 }

@@ -4,21 +4,18 @@ namespace MercadoPago\Core\Helper;
 
 use Magento\Framework\View\LayoutFactory;
 
-
 /**
  * Class Data
  *
  * @package MercadoPago\Core\Helper
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class Data
-    extends \Magento\Payment\Helper\Data
+class Data extends \Magento\Payment\Helper\Data
 {
     /**
      *path to mercadopago custom ticket active
      */
     const XML_PATH_MERCADOPAGO_TICKET_ACTIVE = 'payment/mercadopago_customticket/active';
-
 
     /**
      *path to access token config
@@ -33,7 +30,6 @@ class Data
      */
     const XML_PATH_MERCADOPAGO_CUSTOM_ACTIVE = 'payment/mercadopago_custom/active';
 
-
     /**
      *path to client id config
      */
@@ -42,7 +38,6 @@ class Data
      *path to client secret config
      */
     const XML_PATH_CLIENT_SECRET = 'payment/mercadopago_standard/client_secret';
-
 
     /**
      *path to mercadopago country config
@@ -82,7 +77,6 @@ class Data
     const XML_PATH_SPONSOR_ID = 'payment/mercadopago/sponsor_id';
 
     const XML_PATH_CONSIDER_DISCOUNT = 'payment/mercadopago/consider_discount';
-
 
     /**
      *api platform openplatform
@@ -158,10 +152,15 @@ class Data
         \Magento\Sales\Model\OrderFactory $orderFactory,
         \Magento\Backend\Block\Store\Switcher $switcher,
         \Magento\Framework\Composer\ComposerInformation $composerInformation
-
-    )
-    {
-        parent::__construct($context, $layoutFactory, $paymentMethodFactory, $appEmulation, $paymentConfig, $initialConfig);
+    ) {
+        parent::__construct(
+            $context,
+            $layoutFactory,
+            $paymentMethodFactory,
+            $appEmulation,
+            $paymentConfig,
+            $initialConfig
+        );
         $this->_messageInterface = $messageInterface;
         $this->_mpLogger = $logger;
         $this->_statusFactory = $statusFactory;
@@ -180,12 +179,15 @@ class Data
     public function log($message, $name = "mercadopago", $array = null)
     {
         //load admin configuration value, default is true
-        $actionLog = $this->scopeConfig->getValue('payment/mercadopago/logs', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $actionLog = $this->scopeConfig->getValue(
+            'payment/mercadopago/logs',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
         if (!$actionLog) {
             return;
         }
         //if extra data is provided, it's encoded for better visualization
-        if (!is_null($array)) {
+        if (isset($array)) {
             $message .= " - " . json_encode($array);
         }
 
@@ -204,7 +206,9 @@ class Data
     {
         $params = func_num_args();
         if ($params > 2 || $params < 1) {
-            throw new \Magento\Framework\Exception\LocalizedException(__('Invalid arguments. Use CLIENT_ID and CLIENT SECRET, or ACCESS_TOKEN'));
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('Invalid arguments. Use CLIENT_ID and CLIENT SECRET, or ACCESS_TOKEN')
+            );
         }
         if ($params == 1) {
             $api = new \MercadoPago\Core\Lib\Api(func_get_arg(0));
@@ -214,7 +218,11 @@ class Data
             $api->set_platform(self::PLATFORM_STD);
         }
         if ($this->_switcher->getWebsiteId() != 0) {
-            if ($this->scopeConfig->getValue('payment/mercadopago_standard/sandbox_mode', \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE, $this->_switcher->getWebsiteId())) {
+            if ($this->scopeConfig->getValue(
+                'payment/mercadopago_standard/sandbox_mode',
+                \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
+                $this->_switcher->getWebsiteId())
+            ) {
                 $api->sandbox_mode(true);
             }
         } else {
@@ -223,11 +231,9 @@ class Data
             }
         }
 
-
         $api->set_type(self::TYPE);
 
         return $api;
-
     }
 
     /**
@@ -285,8 +291,16 @@ class Data
      */
     public function getAccessToken($scopeCode = null)
     {
-        $clientId = $this->scopeConfig->getValue(self::XML_PATH_CLIENT_ID, \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE, $scopeCode);
-        $clientSecret = $this->scopeConfig->getValue(self::XML_PATH_CLIENT_SECRET, \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE, $scopeCode);
+        $clientId = $this->scopeConfig->getValue(
+            self::XML_PATH_CLIENT_ID,
+            \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
+            $scopeCode
+        );
+        $clientSecret = $this->scopeConfig->getValue(
+            self::XML_PATH_CLIENT_SECRET,
+            \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
+            $scopeCode
+        );
         try {
             $accessToken = $this->getApiInstance($clientId, $clientSecret)->get_access_token();
         } catch (\Exception $e) {
@@ -317,7 +331,11 @@ class Data
         $originalAmount = $transactionAmount + $shippingCost;
 
         if ($couponAmount
-            && $this->_scopeConfig->isSetFlag(self::XML_PATH_CONSIDER_DISCOUNT,\Magento\Store\Model\ScopeInterface::SCOPE_STORE)) {
+            && $this->_scopeConfig->isSetFlag(
+                self::XML_PATH_CONSIDER_DISCOUNT,
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            )
+        ) {
             $order->setDiscountCouponAmount($couponAmount * -1);
             $order->setBaseDiscountCouponAmount($couponAmount * -1);
             $financingCost = $paidAmount + $couponAmount - $originalAmount;
@@ -331,7 +349,6 @@ class Data
             $order->setBaseShippingAmount($shippingCost);
             $order->setShippingAmount($shippingCost);
         }
-
 
         if (\Zend_Locale_Math::round($financingCost, 4) > 0) {
             $order->setFinanceCostAmount($financingCost);
@@ -397,7 +414,6 @@ class Data
         return $finalValue;
     }
 
-
     // @todo
 
     /**
@@ -407,7 +423,10 @@ class Data
      */
     public function getSuccessUrl()
     {
-        if ($this->scopeConfig->getValue(self::XML_PATH_USE_SUCCESSPAGE_MP, \Magento\Store\Model\ScopeInterface::SCOPE_STORE)) {
+        if ($this->scopeConfig->getValue(
+            self::XML_PATH_USE_SUCCESSPAGE_MP,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        )) {
             $url = 'mercadopago/checkout/page';
         } else {
             $url = 'checkout/onepage/success';
@@ -418,17 +437,26 @@ class Data
 
     public function isRefundAvailable()
     {
-        return $this->scopeConfig->getValue(self::XML_PATH_REFUND_AVAILABLE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(
+            self::XML_PATH_REFUND_AVAILABLE,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
     }
 
     public function getMaximumDaysRefund()
     {
-        return (int)$this->scopeConfig->getValue(self::XML_PATH_MAXIMUM_DAYS_REFUND, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return (int)$this->scopeConfig->getValue(
+            self::XML_PATH_MAXIMUM_DAYS_REFUND,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
     }
 
     public function getMaximumPartialRefunds()
     {
-        return (int)$this->scopeConfig->getValue(self::XML_PATH_MAXIMUM_PARTIAL_REFUNDS, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return (int)$this->scopeConfig->getValue(
+            self::XML_PATH_MAXIMUM_PARTIAL_REFUNDS,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
     }
 
     public function getClientId()
@@ -438,12 +466,18 @@ class Data
 
     public function getClientSecret()
     {
-        return $this->scopeConfig->getValue(self::XML_PATH_CLIENT_SECRET, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(
+            self::XML_PATH_CLIENT_SECRET,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
     }
 
     public function getPublicKey()
     {
-        return $this->scopeConfig->getValue(self::XML_PATH_PUBLIC_KEY, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(
+            self::XML_PATH_PUBLIC_KEY,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**
@@ -451,7 +485,10 @@ class Data
      */
     public function isAvailableCalculator()
     {
-        return $this->scopeConfig->getValue(self::XML_PATH_CALCULATOR_AVAILABLE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(
+            self::XML_PATH_CALCULATOR_AVAILABLE,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**
@@ -459,7 +496,10 @@ class Data
      */
     public function getPagesToShow()
     {
-        return $this->scopeConfig->getValue(self::XML_PATH_CALCULATOR_PAGES, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(
+            self::XML_PATH_CALCULATOR_PAGES,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**
@@ -516,18 +556,31 @@ class Data
         if ($order->getPayment()->getData('method')) {
             $methodCode = $order->getPayment()->getData('method');
             $analyticsData = [
-                'payment_id'    => isset($additionalInfo['payment_id_detail']) ? $order->getPayment()->getData('additional_information')['payment_id_detail'] : '',
+                'payment_id'    => isset($additionalInfo['payment_id_detail']) ?
+                    $order->getPayment()->getData('additional_information')['payment_id_detail'] : '',
                 'payment_type'  => 'credit_card',
                 'checkout_type' => 'custom'
             ];
             if ($methodCode == \MercadoPago\Core\Model\Custom\Payment::CODE) {
-                $analyticsData['public_key'] = $this->scopeConfig->getValue('payment/mercadopago_custom/public_key', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+                $analyticsData['public_key'] = $this->scopeConfig->getValue(
+                    'payment/mercadopago_custom/public_key',
+                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                );
             } elseif ($methodCode == \MercadoPago\Core\Model\Standard\Payment::CODE) {
-                $analyticsData['analytics_key'] = $this->scopeConfig->getValue(\MercadoPago\Core\Helper\Data::XML_PATH_CLIENT_ID, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+                $analyticsData['analytics_key'] = $this->scopeConfig->getValue(
+                    \MercadoPago\Core\Helper\Data::XML_PATH_CLIENT_ID,
+                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                );
                 $analyticsData['checkout_type'] = 'basic';
-                $analyticsData['payment_type'] = isset($additionalInfo['payment_type_id']) ? $order->getPayment()->getData('additional_information')['payment_type_id'] : 'credit_card';
+                $analyticsData['payment_type'] = isset($additionalInfo['payment_type_id']) ?
+                    $order->getPayment()->getData('additional_information')['payment_type_id'] : 'credit_card';
             } else {
-                $analyticsData['analytics_key'] = $this->getClientIdFromAccessToken($this->scopeConfig->getValue(\MercadoPago\Core\Helper\Data::XML_PATH_ACCESS_TOKEN, \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+                $analyticsData['analytics_key'] = $this->getClientIdFromAccessToken(
+                    $this->scopeConfig->getValue(
+                        \MercadoPago\Core\Helper\Data::XML_PATH_ACCESS_TOKEN,
+                        \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                    )
+                );
                 $analyticsData['payment_type'] = 'ticket';
             }
         }

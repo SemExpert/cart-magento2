@@ -1,21 +1,19 @@
 <?php
 namespace MercadoPago\Core\Helper\Message;
 
-
 /**
  * Class AbstractMessage
  *
  * @package MercadoPago\Core\Helper\Message
  */
-abstract class AbstractMessage
-    implements MessageInterface
+abstract class AbstractMessage implements MessageInterface
 {
     /**
      * Return message array based on subclass
      *
      * @return mixed
      */
-    public abstract function getMessageMap();
+    abstract public function getMessageMap();
 
 
     /**
@@ -34,5 +32,4 @@ abstract class AbstractMessage
 
         return '';
     }
-
 }

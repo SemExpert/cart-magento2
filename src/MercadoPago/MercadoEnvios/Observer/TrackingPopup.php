@@ -8,8 +8,7 @@ use Magento\Framework\Event\ObserverInterface;
  *
  * @package MercadoPago\MercadoEnvios\Observer
  */
-class TrackingPopup
-    implements ObserverInterface
+class TrackingPopup implements ObserverInterface
 {
     /**
      * @var \MercadoPago\MercadoEnvios\Helper\Data
@@ -42,8 +41,7 @@ class TrackingPopup
         \Magento\Shipping\Model\InfoFactory $shippingInfoFactory,
         \Magento\Framework\App\ActionFlag $actionFlag
 
-    )
-    {
+    ) {
         $this->shipmentHelper = $shipmentHelper;
         $this->_request = $request;
         $this->_shippingInfoFactory = $shippingInfoFactory;
@@ -68,5 +66,4 @@ class TrackingPopup
 
         return $observer;
     }
-
 }

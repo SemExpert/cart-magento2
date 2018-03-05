@@ -1,7 +1,6 @@
 <?php
 namespace MercadoPago\Core\Helper\Message;
 
-
 /**
  * Interface MessageInterface
  *
@@ -16,12 +15,10 @@ interface MessageInterface
      */
     public function getMessageMap();
 
-
     /**
      * @param      $key
      *
      * @return string
      */
     public function getMessage($key);
-
 }

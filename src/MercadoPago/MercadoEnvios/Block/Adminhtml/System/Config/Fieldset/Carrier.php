@@ -2,11 +2,11 @@
 namespace MercadoPago\MercadoEnvios\Block\Adminhtml\System\Config\Fieldset;
 
 use Magento\Framework\Data\Form\Element\AbstractElement;
+
 /**
  * Config form FieldSet renderer
  */
-class Carrier
-    extends \Magento\Config\Block\System\Config\Form\Fieldset
+class Carrier extends \Magento\Config\Block\System\Config\Form\Fieldset
 {
 
     const XML_PATH_STANDARD_ACTIVE = 'payment/mercadopago_standard/active';
@@ -24,8 +24,7 @@ class Carrier
         \Magento\Framework\View\Helper\Js $jsHelper,
         \MercadoPago\MercadoEnvios\Helper\Data $helper,
         array $data = []
-    )
-    {
+    ) {
         $this->_helper = $helper;
         parent::__construct($context, $authSession, $jsHelper, $data);
     }
@@ -37,7 +36,7 @@ class Carrier
      *
      * @return string
      */
-    protected function _getFrontendClass($element)
+    protected function _getFrontendClass($element) // @codingStandardsIgnoreLine
     {
         return parent::_getFrontendClass($element) . ' with-button';
     }
@@ -49,7 +48,7 @@ class Carrier
      * @param AbstractElement $element
      * @return string
      */
-    protected function _getHeaderTitleHtml($element)
+    protected function _getHeaderTitleHtml($element) // @codingStandardsIgnoreLine
     {
         $isPaymentEnabled = '';
         $disabledLegend = '';
@@ -64,7 +63,8 @@ class Carrier
             }
         }
 
-        $html = '<div class="config-heading" ><div class="heading"><strong id="meen-logo"><div class="meli-legend">' . $element->getLegend();
+        $html = '<div class="config-heading" ><div class="heading"><strong id="meen-logo"><div class="meli-legend">'
+            . $element->getLegend();
         $html .= '</div></strong>';
 
         $html .= '<div class="button-container"><button '. $isPaymentEnabled .' type="button"'
@@ -89,7 +89,7 @@ class Carrier
      * @return string
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    protected function _getHeaderCommentHtml($element)
+    protected function _getHeaderCommentHtml($element) // @codingStandardsIgnoreLine
     {
         return '';
     }
@@ -102,9 +102,8 @@ class Carrier
      * @return false
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    protected function _isCollapseState($element)
+    protected function _isCollapseState($element) // @codingStandardsIgnoreLine
     {
         return false;
     }
-
 }

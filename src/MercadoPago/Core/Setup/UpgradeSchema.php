@@ -9,8 +9,7 @@ use Magento\Framework\Setup\SchemaSetupInterface;
 /**
  * @codeCoverageIgnore
  */
-class UpgradeSchema
-    implements UpgradeSchemaInterface
+class UpgradeSchema implements UpgradeSchemaInterface
 {
     /**
      * {@inheritdoc}
@@ -26,10 +25,8 @@ class UpgradeSchema
         $salesTable = $installer->getTable('sales_order');
         $quoteTable = $installer->getTable('quote');
 
-
         /*********** VERSION 1.0.2 ADD FINANCE COST COLUMNS TO INVOICE AND CREDITMEMO ***********/
         if (version_compare($context->getVersion(), '1.0.2', '<=')) {
-
             $columns = [
                 'finance_cost_amount'      => [
                     'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
@@ -74,9 +71,7 @@ class UpgradeSchema
                 $connection->addColumn($salesTable, $name, $definition);
                 $connection->addColumn($quoteTable, $name, $definition);
             }
-
         }
-
 
         /*********** VERSION 1.0.4 ADD DISCOUNT COUPON COLUMNS TO QUOTE_ADDRESS ***********/
 

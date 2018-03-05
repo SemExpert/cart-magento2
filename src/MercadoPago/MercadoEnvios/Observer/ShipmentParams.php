@@ -3,16 +3,13 @@ namespace MercadoPago\MercadoEnvios\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 
-class ShipmentParams
-    implements ObserverInterface
+class ShipmentParams implements ObserverInterface
 {
     protected $shipmentCarrierHelper;
 
-
     public function __construct(
         \MercadoPago\MercadoEnvios\Helper\CarrierData $shipmentCarrierHelper
-    )
-    {
+    ) {
         $this->shipmentCarrierHelper = $shipmentCarrierHelper;
     }
 
@@ -37,7 +34,9 @@ class ShipmentParams
                 'mode'                    => 'me2',
                 'zip_code'                => $zipCode,
                 'default_shipping_method' => intval($defaultShippingId),
-                'dimensions'              => $this->shipmentCarrierHelper->getDimensions($this->shipmentCarrierHelper->getAllItems($order->getAllItems()))
+                'dimensions'              => $this->shipmentCarrierHelper->getDimensions(
+                    $this->shipmentCarrierHelper->getAllItems($order->getAllItems())
+                )
             ];
             if ($shippingCost == 0) {
                 $paramsME['free_methods'] = [['id' => intval($defaultShippingId)]];
@@ -51,5 +50,4 @@ class ShipmentParams
 
         return $observer;
     }
-
 }
