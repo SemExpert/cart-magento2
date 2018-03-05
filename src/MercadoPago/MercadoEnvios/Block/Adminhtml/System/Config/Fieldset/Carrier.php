@@ -41,7 +41,6 @@ class Carrier extends \Magento\Config\Block\System\Config\Form\Fieldset
         return parent::_getFrontendClass($element) . ' with-button';
     }
 
-
     /**
      * Return header title part of html for payment solution
      *
@@ -79,7 +78,6 @@ class Carrier extends \Magento\Config\Block\System\Config\Form\Fieldset
 
         return $html;
     }
-
 
     /**
      * Return header comment part of html for payment solution
