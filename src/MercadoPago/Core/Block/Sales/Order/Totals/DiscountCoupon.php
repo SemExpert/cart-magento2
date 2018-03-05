@@ -7,6 +7,7 @@ use Magento\Sales\Model\Order;
 /**
  * Class DiscountCoupon
  *
+ * @api
  * @package MercadoPago\Core\Block\Sales\Order\Totals
  */
 class DiscountCoupon extends \Magento\Framework\View\Element\Template

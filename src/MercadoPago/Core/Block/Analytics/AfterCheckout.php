@@ -2,6 +2,12 @@
 
 namespace MercadoPago\Core\Block\Analytics;
 
+/**
+ * Class AfterCheckout
+ *
+ * @api
+ * @package MercadoPago\Core\Block\Analytics
+ */
 class AfterCheckout extends \Magento\Framework\View\Element\Template
 {
 

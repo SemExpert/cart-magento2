@@ -1,6 +1,12 @@
 <?php
 namespace MercadoPago\Core\Block\Calculator;
 
+/**
+ * Class CalculatorForm
+ *
+ * @api
+ * @package MercadoPago\Core\Block\Calculator
+ */
 class CalculatorForm extends \Magento\Framework\View\Element\Template
 {
 

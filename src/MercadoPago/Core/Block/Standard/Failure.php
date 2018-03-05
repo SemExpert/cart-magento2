@@ -6,6 +6,7 @@ namespace MercadoPago\Core\Block\Standard;
  *
  * Class Failure
  *
+ * @api
  * @package MercadoPago\Core\Block\Standard
  */
 class Failure extends \Magento\Framework\View\Element\Template

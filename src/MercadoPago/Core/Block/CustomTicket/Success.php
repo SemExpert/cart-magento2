@@ -4,6 +4,7 @@ namespace MercadoPago\Core\Block\CustomTicket;
 /**
  * Class Success
  *
+ * @api
  * @package MercadoPago\Core\Block\CustomTicket
  */
 

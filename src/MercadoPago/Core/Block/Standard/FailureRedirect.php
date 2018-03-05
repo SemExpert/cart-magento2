@@ -6,6 +6,7 @@ namespace MercadoPago\Core\Block\Standard;
  *
  * Class FailureRedirect
  *
+ * @api
  * @package MercadoPago\Core\Block\Standard
  */
 class FailureRedirect extends Failure

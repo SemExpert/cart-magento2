@@ -4,6 +4,7 @@ namespace MercadoPago\Core\Block\Custom;
 /**
  * Class Success
  *
+ * @api
  * @package MercadoPago\Core\Block\Custom
  */
 class Success extends \MercadoPago\Core\Block\AbstractSuccess

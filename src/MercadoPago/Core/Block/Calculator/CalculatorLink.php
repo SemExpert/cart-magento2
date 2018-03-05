@@ -2,6 +2,12 @@
 
 namespace MercadoPago\Core\Block\Calculator;
 
+/**
+ * Class CalculatorLink
+ *
+ * @api
+ * @package MercadoPago\Core\Block\Calculator
+ */
 class CalculatorLink extends \Magento\Framework\View\Element\Template
 {
 
