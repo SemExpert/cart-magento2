@@ -34,7 +34,7 @@ $prevValues = $block->_getStoredMappingValues();
                         ?>
                         <select name="<?= /* @noEscape */ $selectName ?>">
                             <?php foreach ($productCode as $option) : ?>
-                                <option value="<?= $block->escapeQuote($option->getAttributeCode()) ?>"
+                                <option value="<?= $block->escapeHtmlAttr($option->getAttributeCode()) ?>"
                                     <?php $optinSelected = isset($prevValues[$meOption]['attribute_code'])
                                         && $prevValues[$meOption]['attribute_code'] == $option->getAttributeCode(); ?>
                                     <?= /* @noEscape */ $optinSelected ? "selected='selected'" : "" ?>>

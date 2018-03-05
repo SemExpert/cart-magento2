@@ -1,6 +1,6 @@
 <script type="text/javascript" src="https://secure.mlstatic.com/modules/javascript/analytics.js"></script>
 <script>
-    var data = <?= json_encode($this->getPaymentData()) ?>;
+    var data = <?= /* @noEscape */ json_encode($this->getPaymentData()) ?>;
     if (data !== null ) {
         var MA = ModuleAnalytics;
         if (data.public_key !== undefined) {

@@ -31,16 +31,17 @@ $isSecure = $this->isCurrentlySecure();
                             <?php foreach ($list as $i) { ?>
                                 <?php if ($i['status'] === STATUS_ACTIVE
                                     & $i['payment_type_id'] === PAYMENT_TYPE_CREDIT_CARD) : ?>
-                                    <li id="<?= $block->escapeQuote($i['id']); ?>-li">
-                                        <label for="<?= $block->escapeQuote($i['id']); ?>">
-                                            <input id="<?= $block->escapeQuote($i['id']); ?>" type="radio"
-                                                   name="paymentMethods" value="<?= $i['id']; ?>" />
+                                    <li id="<?= $block->escapeHtmlAttr($i['id']); ?>-li">
+                                        <label for="<?= $block->escapeHtmlAttr($i['id']); ?>">
+                                            <input id="<?= $block->escapeHtmlAttr($i['id']); ?>" type="radio"
+                                                   name="paymentMethods"
+                                                   value="<?= $block->escapeHtmlAttr($i['id']); ?>" />
                                             <?php if ($isSecure) : ?>
-                                                <img src="<?= $block->escapeQuote($i['secure_thumbnail']); ?>"
-                                                     alt="<?= $i['id']; ?>"/>
+                                                <img src="<?= $block->escapeHtmlAttr($i['secure_thumbnail']); ?>"
+                                                     alt="<?= $block->escapeHtmlAttr($i['id']); ?>"/>
                                             <?php else : ?>
-                                                <img src="<?= $block->escapeQuote($i['thumbnail']); ?>"
-                                                     alt="<?= $i['id']; ?>"/>
+                                                <img src="<?= $block->escapeHtmlAttr($i['thumbnail']); ?>"
+                                                     alt="<?= $block->escapeHtmlAttr($i['id']); ?>"/>
                                             <?php endif; ?>
                                         </label>
                                     </li>
