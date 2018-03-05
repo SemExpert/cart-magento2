@@ -75,12 +75,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     protected $_shipment;
 
-
     /**
      * @var array
      */
     public static $enabled_methods = ['mla', 'mlb', 'mlm'];
-
 
     /**
      * @var \Magento\Framework\Registry

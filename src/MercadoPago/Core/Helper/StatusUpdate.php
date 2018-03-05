@@ -51,7 +51,6 @@ class StatusUpdate extends \Magento\Payment\Helper\Data
      */
     protected $_orderSender;
 
-
     protected $_dataHelper;
     protected $_coreHelper;
 
@@ -518,8 +517,6 @@ class StatusUpdate extends \Magento\Payment\Helper\Data
                 if (isset($additionalInfo['token'])) {
                     $order->getPayment()->getMethodInstance()->customerAndCards($additionalInfo['token'], $payment);
                 }
-
-
             } elseif ($status == 'refunded' || $status == 'cancelled') {
                 $order->setExternalRequest(true);
                 $order->cancel();
@@ -607,7 +604,6 @@ class StatusUpdate extends \Magento\Payment\Helper\Data
                     'payer_identification_number'
 
                 ];
-
 
                 foreach ($additionalFields as $field) {
                     if (isset($data[$field]) && empty($paymentAdditionalInfo['second_card_token'])) {

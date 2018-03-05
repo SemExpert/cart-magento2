@@ -22,27 +22,39 @@ $prevValues = $block->_getStoredMappingValues();
             <th><?= /* @escapeNotVerified */__('Product Attribute')?></th>
             <th><?= /* @escapeNotVerified */__('Product Attribute Unit')?></th>
         </tr>
-        <?php foreach($meCode as $key => $meOption):?>
+        <?php foreach ($meCode as $key => $meOption) :?>
             <tr id="<?= /* @noEscape */ $meOption ?>">
                     <td>
-                        <label><?php echo $block->escapeHtml($meLabel[$key]) ?>:</label>
+                        <label><?= $block->escapeHtml($meLabel[$key]) ?>:</label>
                     </td>
                     <td>
-                        <select name="groups[mercadoenvios][fields][attributesmapping][value][<?= /* @noEscape */ $meOption ?>][attribute_code]">
-                            <?php foreach($productCode as $option):?>
-                                <option value="<?php echo $block->escapeQuote($option->getAttributeCode()) ?>"
+                        <?php
+                        $selectName = 'groups[mercadoenvios][fields][attributesmapping][value][' . $meOption
+                            . '][attribute_code]';
+                        ?>
+                        <select name="<?= /* @noEscape */ $selectName ?>">
+                            <?php foreach ($productCode as $option) : ?>
+                                <option value="<?= $block->escapeQuote($option->getAttributeCode()) ?>"
                                     <?php $optinSelected = isset($prevValues[$meOption]['attribute_code'])
                                         && $prevValues[$meOption]['attribute_code'] == $option->getAttributeCode(); ?>
                                     <?= /* @noEscape */ $optinSelected ? "selected='selected'" : "" ?>>
-                                    <?php echo $block->escapeHtml($option->getFrontendLabel()) ?>
+                                    <?= $block->escapeHtml($option->getFrontendLabel()) ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
                     </td>
-                    <?php if ($meOption == 'weight') : $unit = $weightUnit; endif;?>
+                    <?php
+                    if ($meOption == 'weight') {
+                        $unit = $weightUnit;
+                    }
+                    ?>
                     <td>
-                        <select name="groups[mercadoenvios][fields][attributesmapping][value][<?= /* @noEscape */ $meOption ?>][unit]">
-                            <?php foreach($unit as $_u):?>
+                        <?php
+                        $selectName = 'groups[mercadoenvios][fields][attributesmapping][value][' . $meOption
+                            . '][unit]';
+                        ?>
+                        <select name="<?= /* @noEscape */ $selectName ?>">
+                            <?php foreach ($unit as $_u) :?>
                                 <option value="<?= /* @noEscape */ $_u ?>"
                                         <?= /* @noEscape */ (isset($prevValues[$meOption]['unit'])
                                             && $prevValues[$meOption]['unit'] == $_u) ? "selected='selected'" : '' ?>>

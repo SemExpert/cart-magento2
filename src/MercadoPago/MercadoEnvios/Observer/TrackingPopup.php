@@ -40,7 +40,6 @@ class TrackingPopup implements ObserverInterface
         \Magento\Framework\App\Request\Http $request,
         \Magento\Shipping\Model\InfoFactory $shippingInfoFactory,
         \Magento\Framework\App\ActionFlag $actionFlag
-
     ) {
         $this->shipmentHelper = $shipmentHelper;
         $this->_request = $request;

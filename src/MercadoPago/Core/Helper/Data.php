@@ -221,8 +221,8 @@ class Data extends \Magento\Payment\Helper\Data
             if ($this->scopeConfig->getValue(
                 'payment/mercadopago_standard/sandbox_mode',
                 \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
-                $this->_switcher->getWebsiteId())
-            ) {
+                $this->_switcher->getWebsiteId()
+            )) {
                 $api->sandbox_mode(true);
             }
         } else {

@@ -300,7 +300,13 @@ class MercadoEnvios extends \Magento\Shipping\Model\Carrier\AbstractCarrier impl
     protected function _isAvailableRate($rateId) // @codingStandardsIgnoreLine
     {
         if (empty($this->_available)) {
-            $this->_available = explode(',', $this->_scopeConfig->getValue('carriers/mercadoenvios/availablemethods', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+            $this->_available = explode(
+                ',',
+                $this->_scopeConfig->getValue(
+                    'carriers/mercadoenvios/availablemethods',
+                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                )
+            );
         }
 
         return in_array($rateId, $this->_available);

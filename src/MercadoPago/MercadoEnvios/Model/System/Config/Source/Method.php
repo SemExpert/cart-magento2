@@ -65,5 +65,4 @@ class Method implements \Magento\Framework\Option\ArrayInterface
         }
         return $codes;
     }
-
 }

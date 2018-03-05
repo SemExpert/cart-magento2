@@ -229,7 +229,6 @@ class CarrierData extends Data
 
                 return $unit->getValue();
             }
-
         } elseif ($this->_mapping[$attributeType]['unit'] != self::ME_LENGTH_UNIT) {
             $unit = new \Zend_Measure_Length((float)$value);
             $unit->convertTo(\Zend_Measure_Length::CENTIMETER);

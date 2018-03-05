@@ -48,8 +48,8 @@ class Mapping extends \Magento\Config\Model\Config\Backend\Serialized\ArraySeria
         if ($this->_config->getValue(
             'carriers/mercadoenvios/active',
             \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
-            $this->_scopeCode)
-        ) {
+            $this->_scopeCode
+        )) {
             foreach ($mappingValues as $value) {
                 if (in_array($value['attribute_code'], $attributeCodes)) {
                     throw new \Exception(__('Cannot repeat Magento Product size attributes'));

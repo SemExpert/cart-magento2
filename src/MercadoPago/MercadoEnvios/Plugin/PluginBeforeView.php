@@ -20,8 +20,7 @@ class PluginBeforeView
      */
     public function __construct(
         \MercadoPago\MercadoEnvios\Helper\Data $shipmentHelper
-    )
-    {
+    ) {
         $this->_shipmentHelper = $shipmentHelper;
     }
 
