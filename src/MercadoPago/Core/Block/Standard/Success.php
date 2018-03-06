@@ -6,6 +6,7 @@ namespace MercadoPago\Core\Block\Standard;
  *
  * Class Success
  *
+ * @api
  * @package MercadoPago\Core\Block\Standard
  */
 class Success extends \MercadoPago\Core\Block\AbstractSuccess
