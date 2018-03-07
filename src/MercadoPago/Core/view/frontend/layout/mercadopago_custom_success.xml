@@ -13,7 +13,7 @@
         </referenceContainer>
         <referenceContainer name="after.body.start">
             <block class="MercadoPago\Core\Block\Analytics\AfterCheckout" name="mp_analytics" as="mp_analytics"
-                   template="MercadoPago?Core::mp_analytics.phtml"/>
+                   template="MercadoPago_Core::mp_analytics.phtml"/>
         </referenceContainer>
     </body>
 </page>
