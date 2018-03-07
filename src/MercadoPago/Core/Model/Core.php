@@ -274,7 +274,7 @@ class Core extends \Magento\Payment\Model\Method\AbstractMethod
 
         foreach ($fields as $field) {
             if ($payment->getAdditionalInformation($field['field']) != "") {
-                $text = $field['title'];
+                $text = __($field['title'], $payment->getAdditionalInformation($field['field']));
                 $info_payments[$field['field']] = [
                     "text"  => $text,
                     "value" => $payment->getAdditionalInformation($field['field'])
@@ -403,7 +403,7 @@ class Core extends \Magento\Payment\Model\Method\AbstractMethod
     /**
      * Return info about items of order
      *
-     * @param $order
+     * @param \Magento\Sales\Model\Order $order
      *
      * @return array
      */
@@ -507,6 +507,8 @@ class Core extends \Magento\Payment\Model\Method\AbstractMethod
         } else {
             $preference['transaction_amount'] = (float)$this->getAmount();
         }
+
+        $preference['transaction_amount'] = round($preference['transaction_amount'], 2);
 
         $preference['external_reference'] = $order->getIncrementId();
         $preference['payer']['email'] = $customerInfo['email'];
