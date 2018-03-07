@@ -13,26 +13,35 @@ class Mapping extends \Magento\Config\Model\Config\Backend\Serialized\ArraySeria
     /**
      * Mapping constructor.
      *
-     * @param \Magento\Backend\Block\Store\Switcher                        $switcher
      * @param \Magento\Framework\Model\Context                             $context
      * @param \Magento\Framework\Registry                                  $registry
      * @param \Magento\Framework\App\Config\ScopeConfigInterface           $config
      * @param \Magento\Framework\App\Cache\TypeListInterface               $cacheTypeList
+     * @param \Magento\Backend\Block\Store\Switcher                        $switcher
+     * @param array                                                        $data
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb|null           $resourceCollection
-     * @param array                                                        $data
      */
     public function __construct(
-        \Magento\Backend\Block\Store\Switcher                   $switcher,
         \Magento\Framework\Model\Context                        $context,
         \Magento\Framework\Registry                             $registry,
         \Magento\Framework\App\Config\ScopeConfigInterface      $config,
         \Magento\Framework\App\Cache\TypeListInterface          $cacheTypeList,
+        \Magento\Backend\Block\Store\Switcher                   $switcher,
+        array $data = [],
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
-        \Magento\Framework\Data\Collection\AbstractDb           $resourceCollection = null,
-        array $data = []
+        \Magento\Framework\Data\Collection\AbstractDb           $resourceCollection = null
     ) {
-        parent::__construct($context, $registry, $config, $cacheTypeList, $resource, $resourceCollection, $data);
+        parent::__construct(
+            $context,
+            $registry,
+            $config,
+            $cacheTypeList,
+            $resource,
+            $resourceCollection,
+            $data
+        );
+
         $this->_scopeCode = $switcher->getWebsiteId();
     }
 
