@@ -18,7 +18,9 @@ class FinanceCost
         $order = $creditmemo->getOrder();
         $amount = $order->getFinanceCostAmount();
         $baseAmount = $order->getBaseFinanceCostAmount();
-        if ($amount) {
+        $invoices = $order->getInvoiceCollection()->count();
+        $creditmemos = $order->getCreditmemosCollection()->count();
+        if ($amount && !($invoices == 2 && !$creditmemos)) {
             $creditmemo->setFinanceCostAmount($amount);
             $creditmemo->setBaseFinanceCostAmount($baseAmount);
             $creditmemo->setGrandTotal($creditmemo->getGrandTotal() + $amount);

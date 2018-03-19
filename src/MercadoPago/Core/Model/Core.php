@@ -471,7 +471,7 @@ class Core
         $notification_url = $this->_urlBuilder->getUrl('mercadopago/notifications/custom');
 
         if (isset($notification_url)) {
-            $preference['notification_url'] = $notification_url;
+            //$preference['notification_url'] = $notification_url;
         }
 
         $preference['description'] = __("Order # %1 in store %2", $order->getIncrementId(), $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK));

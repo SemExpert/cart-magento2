@@ -19,7 +19,7 @@ class FinanceCost
         $order = $invoice->getOrder();
         $amount = $order->getFinanceCostAmount();
         $baseAmount = $order->getBaseFinanceCostAmount();
-        if ($amount) {
+        if ($amount && !$invoice->getOrder()->getInvoiceCollection()->count()) {
             $invoice->setFinanceCostAmount($amount);
             $invoice->setBaseFinanceCostAmount($baseAmount);
             $invoice->setGrandTotal($invoice->getGrandTotal() + $amount);
