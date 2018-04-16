@@ -305,6 +305,16 @@ define(
                 if (event) {
                     event.preventDefault();
                 }
+                /**
+                 * Allowed payment_method_id:
+                 * - visa
+                 * - amex
+                 */
+                var payment_method_name = TinyJ('#mercadopago_checkout_custom').getElem('#payment_method_id').val();
+                if (payment_method_name !== 'visa' && payment_method_name !== 'amex') {
+                    alert('Sólo es posible abonar con tarjetas Visa o American Express');
+                    return false;
+                }
 
                 if (this.validate() && additionalValidators.validate() && !this.hasErrors()) {
                     this.isPlaceOrderActionAllowed(false);
