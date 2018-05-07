@@ -350,17 +350,17 @@ class Data
      */
     public function setPayerInfo(&$payment)
     {
-        if ($data['payment_method_id']) {
-            $payment["payment_method"] = $data['payment_method_id'];
+        if ($payment['payment_method_id']) {
+            $payment["payment_method"] = $payment['payment_method_id'];
         }
-        if ($data['installments']) {
-            $payment["installments"] = $data['installments'];
+        if ($payment['installments']) {
+            $payment["installments"] = $payment['installments'];
         }
-        if ($data['id']) {
-            $payment["payment_id_detail"] = $data['id'];
+        if ($payment['id']) {
+            $payment["payment_id_detail"] = $payment['id'];
         }
-        if (isset($data['trunc_card'])) {
-            $payment["trunc_card"] = $data['trunc_card'];
+        if (isset($payment['trunc_card'])) {
+            $payment["trunc_card"] = $payment['trunc_card'];
         } else {
             $payment["trunc_card"] = "xxxx xxxx xxxx " . $payment['card']["last_four_digits"];
         }
