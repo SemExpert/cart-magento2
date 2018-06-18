@@ -339,14 +339,17 @@ class Payment
                 $infoInstance->setAdditionalInformation('status', $payment['status']);
                 $infoInstance->setAdditionalInformation('status_detail', $payment['status_detail']);
                 $infoInstance->setAdditionalInformation('payment_id_detail', $payment['id']);
-                $infoInstance->setAdditionalInformation(
-                    'payer_identification_type',
-                    $payment['payer']['identification']['type']
-                );
-                $infoInstance->setAdditionalInformation(
-                    'payer_identification_number',
-                    $payment['payer']['identification']['number']
-                );
+                $identification = $payment['payer']['identification'];
+                if (!empty($identification)) {
+                    $infoInstance->setAdditionalInformation(
+                        'payer_identification_type',
+                        $payment['payer']['identification']['type']
+                    );
+                    $infoInstance->setAdditionalInformation(
+                        'payer_identification_number',
+                        $payment['payer']['identification']['number']
+                    );
+                }
                 return true;
             }
         }
