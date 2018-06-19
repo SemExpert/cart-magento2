@@ -72,7 +72,7 @@ install:
   - composer require $TEST_COMPOSER_MODULE dev-$TRAVIS_PULL_REQUEST_BRANCH
 before_script:
   - ./dev/travis/before_script.sh
-  - if [ $TEST_SUITE == "static" ]; then cp ${TRAVIS_BUILD_DIR}/dev/tests/static/phpunit.xml dev/tests/static/phpunit.xml
+  - if [ $TEST_SUITE == "static" ]; then cp ${TRAVIS_BUILD_DIR}/dev/tests/static/phpunit.xml dev/tests/static/phpunit.xml; fi
 script:
   # Set arguments for variants of phpunit based tests; '|| true' prevents failing script when leading test fails
   - test $TEST_SUITE = "functional" && TEST_FILTER='dev/tests/functional/testsuites/Magento/Mtf/TestSuite/InjectableTests.php' || true
