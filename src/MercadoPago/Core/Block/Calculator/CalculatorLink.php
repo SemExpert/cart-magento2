@@ -118,7 +118,7 @@ class CalculatorLink extends \Magento\Framework\View\Element\Template
 
     public function getUrlLogo()
     {
-        return $this->_assetRepo->getUrl("MercadoPago_Core::images/mp_logo.png");
+        return $this->_assetRepo->getUrl("images/mp_logo.png");
     }
 
     /**
