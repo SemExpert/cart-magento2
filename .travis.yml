@@ -27,7 +27,7 @@ env:
     - MAGENTO_VERSION=2.1 TEST_SUITE=integration INTEGRATION_INDEX=3
     - MAGENTO_VERSION=2.1 TEST_SUITE=functional
     - MAGENTO_VERSION=2.2 TEST_SUITE=unit
-    - MAGENTO_VERSION=2.2 TEST_SUITE=static
+    #- MAGENTO_VERSION=2.2 TEST_SUITE=static
     - MAGENTO_VERSION=2.2 TEST_SUITE=js GRUNT_COMMAND=spec
     - MAGENTO_VERSION=2.2 TEST_SUITE=js GRUNT_COMMAND=static
     - MAGENTO_VERSION=2.2 TEST_SUITE=integration INTEGRATION_INDEX=1
@@ -66,10 +66,12 @@ before_install:
   - cd ${TRAVIS_BUILD_DIR}/magento2
   - ./dev/travis/before_install.sh
 install:
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
   - composer config minimum-stability dev
   - composer install --no-interaction --prefer-dist
   - composer config repositories.test_target git https://github.com/${TRAVIS_REPO_SLUG}.git
-  - composer require $TEST_COMPOSER_MODULE dev-$TRAVIS_PULL_REQUEST_BRANCH
+  - composer require $TEST_COMPOSER_MODULE dev-$BRANCH
 before_script:
   - ./dev/travis/before_script.sh
   - if [ $TEST_SUITE == "static" ]; then cp ${TRAVIS_BUILD_DIR}/dev/tests/static/phpunit.xml dev/tests/static/phpunit.xml; fi
