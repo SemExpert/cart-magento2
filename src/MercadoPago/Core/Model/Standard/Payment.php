@@ -265,6 +265,7 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod
         $total_item = $this->getTotalItems($arr['items']);
         $total_item += (float)$order->getBaseShippingAmount();
         $order_amount = (float)$order->getBaseGrandTotal();
+
         if (!$order_amount) {
             $order_amount = (float)$order->getBasePrice() + $order->getBaseShippingAmount();
         }

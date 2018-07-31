@@ -116,16 +116,22 @@ class StatusUpdate extends \Magento\Payment\Helper\Data
     {
         $status = $notificationData['status'];
         $statusDetail = $notificationData['status_detail'];
-        $currentStatus = $order->getPayment()->getAdditionalInformation('status');
-        $currentStatusDetail = $order->getPayment()->getAdditionalInformation('status_detail');
 
         if ($order->getPayment() !== null && $order->getPayment()->getAdditionalInformation('second_card_token')) {
             $this->_statusUpdatedFlag = false;
-
             return;
         }
-        if ($status == $currentStatus && $statusDetail == $currentStatusDetail) {
-            $this->_statusUpdatedFlag = true;
+
+        //get the posible status update order
+        $statusToUpdate = $this->getStatusOrder($status, $statusDetail, false);
+        $order = $this->_coreHelper->_getOrder($notificationData["external_reference"]);
+        $commentsObject = $order->getStatusHistoryCollection(true);
+
+        //check if the status has been updated in some time
+        foreach ($commentsObject as $commentObj) {
+            if($commentObj->getStatus() == $statusToUpdate){
+                $this->_statusUpdatedFlag = true;
+            }
         }
     }
 
@@ -492,6 +498,7 @@ class StatusUpdate extends \Magento\Payment\Helper\Data
         if (isset($payment['status_final'])) {
             $status = $payment['status_final'];
         }
+
         $message = $this->getMessage($status, $payment);
         if ($this->isStatusUpdated()) {
             return ['text' => $message, 'code' => \MercadoPago\Core\Helper\Response::HTTP_OK];
@@ -513,9 +520,8 @@ class StatusUpdate extends \Magento\Payment\Helper\Data
                 $this->_createInvoice($order, $message);
 
                 //Associate card to customer
-                $additionalInfo = $order->getPayment()->getAdditionalInformation();
-                if (isset($additionalInfo['token'])) {
-                    $order->getPayment()->getMethodInstance()->customerAndCards($additionalInfo['token'], $payment);
+                if (isset($payment['metadata']) && isset($payment['metadata']['token'])) {
+                    $order->getPayment()->getMethodInstance()->customerAndCards($payment['metadata']['token'], $payment);
                 }
             } elseif ($status == 'refunded' || $status == 'cancelled') {
                 $order->setExternalRequest(true);
@@ -565,11 +571,40 @@ class StatusUpdate extends \Magento\Payment\Helper\Data
     {
         if ($order->getState() !== \Magento\Sales\Model\Order::STATE_COMPLETE) {
             $statusOrder = $this->getStatusOrder($status, $statusDetail, $order->canCreditmemo());
+            $emailAlreadySent = false;
+            //get scope config
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $scopeConfig = $objectManager->create('\Magento\Framework\App\Config\ScopeConfigInterface');
+            $emailOrderCreate = $scopeConfig->getValue('payment/mercadopago/email_order_create', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
 
-            $order->setState($this->_getAssignedState($statusOrder));
+            if($statusOrder == 'canceled'){
+                $order->cancel();
+            }else{
+                $order->setState($this->_getAssignedState($statusOrder));
+            }
+
+            //add comment to history
             $order->addStatusToHistory($statusOrder, $message, true);
-            if (!$order->getEmailSent()) {
-                $this->_orderSender->send($order, true, $message);
+
+            //ckeck is active send email when create order
+            if($emailOrderCreate){
+                if (!$order->getEmailSent()){
+                    $this->_orderSender->send($order, true, $message);
+                    $emailAlreadySent = true;
+                }
+            }
+
+            //if the email has not been sent check sent in status
+            if($emailAlreadySent === false){
+                // search the list of statuses that can send email
+                $statusEmail = $scopeConfig->getValue('payment/mercadopago/email_order_update', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+                $statusEmailList = explode(",", $statusEmail);
+    
+                //check if the status is on the authorized list
+                if(in_array($status, $statusEmailList)){    
+                    $orderCommentSender = $objectManager->create('Magento\Sales\Model\Order\Email\Sender\OrderCommentSender');
+                    $orderCommentSender->send($order, $notify = '1' , str_replace("<br/>", "", $message));
+                }
             }
         }
     }

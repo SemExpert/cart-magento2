@@ -150,4 +150,11 @@ class AbstractSuccess extends \Magento\Framework\View\Element\Template
 
         return $url;
     }
+
+
+    public function getReOrderUrl(){
+        $params = ['order_id' => $this->_checkoutSession->getLastRealOrder()->getId()];
+        $url = $this->_urlBuilder->getUrl('sales/order/reorder', $params);
+        return $url;
+    }
 }
