@@ -1,10 +1,10 @@
 <?php
 namespace MercadoPago\Core\Block\Adminhtml\System\Config\Fieldset;
+
 /**
  * Config form FieldSet renderer
  */
-class Payment
-    extends \Magento\Config\Block\System\Config\Form\Fieldset
+class Payment extends \Magento\Config\Block\System\Config\Form\Fieldset
 {
 
     /**
@@ -18,8 +18,7 @@ class Payment
         \Magento\Backend\Model\Auth\Session $authSession,
         \Magento\Framework\View\Helper\Js $jsHelper,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($context, $authSession, $jsHelper, $data);
     }
 
@@ -45,7 +44,8 @@ class Payment
      */
     protected function _getHeaderTitleHtml($element)
     {
-        $html = '<div class="config-heading meli" ><div class="heading"><strong id="meli-logo">' . $element->getLegend();
+        $html = '<div class="config-heading meli" ><div class="heading"><strong id="meli-logo">'
+            . $element->getLegend();
         $html .= '</strong></div>';
 
         $html .= '<div class="button-container meli-cards"><button type="button"'
@@ -58,7 +58,6 @@ class Payment
 
         return $html;
     }
-
 
     /**
      * Return header comment part of html for payment solution
@@ -85,5 +84,4 @@ class Payment
     {
         return false;
     }
-
 }

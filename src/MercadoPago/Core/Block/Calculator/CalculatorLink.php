@@ -2,9 +2,13 @@
 
 namespace MercadoPago\Core\Block\Calculator;
 
-
-class CalculatorLink
-    extends \Magento\Framework\View\Element\Template
+/**
+ * Class CalculatorLink
+ *
+ * @api
+ * @package MercadoPago\Core\Block\Calculator
+ */
+class CalculatorLink extends \Magento\Framework\View\Element\Template
 {
 
     const PAGE_PDP = 'product.info.calculator';
@@ -38,8 +42,6 @@ class CalculatorLink
         \MercadoPago\Core\Helper\Data                       $helper,
         \Magento\Framework\Registry                         $registry,
         \Magento\Checkout\Model\Session                     $session,
-
-
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -48,24 +50,30 @@ class CalculatorLink
         $this->_mysession = $session;
     }
 
-
     /**
      * Check if the access token is valid, if the API is not down and if the configuration is enabled
      *
      * @return bool
      */
-    public function isAvailableCalculator(){
+    public function isAvailableCalculator()
+    {
+        $accessToken = $this->_scopeConfig->getValue(
+            \MercadoPago\Core\Helper\Data::XML_PATH_ACCESS_TOKEN,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
 
-        $accessToken = $this->_scopeConfig->getValue(\MercadoPago\Core\Helper\Data::XML_PATH_ACCESS_TOKEN, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $isValidAccessToken = $this->_helperData->isValidAccessToken($accessToken);
-        return  ($isValidAccessToken & !empty($this->_helperData->getPublicKey()) & $this->_helperData->isAvailableCalculator());
+
+        return  ($isValidAccessToken & !empty($this->_helperData->getPublicKey())
+            & $this->_helperData->isAvailableCalculator());
     }
 
     /**
      * @param $nameLayoutContainer string
      * @return bool
      */
-    public function isPageToShow($nameLayoutContainer){
+    public function isPageToShow($nameLayoutContainer)
+    {
 
         $valueConfig = $this->_helperData->getPagesToShow();
         $pages = explode(',', $valueConfig);
@@ -77,7 +85,8 @@ class CalculatorLink
      * @param $nameLayoutContainer string
      * @return bool
      */
-    public function inPagePDP($nameLayoutContainer){
+    public function inPagePDP($nameLayoutContainer)
+    {
 
         return $nameLayoutContainer === self::PAGE_PDP;
     }
@@ -86,25 +95,30 @@ class CalculatorLink
      * @param $nameLayoutContainer string
      * @return bool
      */
-    public function inPageCheckoutCart($nameLayoutContainer){
+    public function inPageCheckoutCart($nameLayoutContainer)
+    {
 
         return $nameLayoutContainer === self::PAGE_CART;
     }
 
-    public function getUrlCalculatorPayment(){
+    public function getUrlCalculatorPayment()
+    {
         return $this->_storeManager->getStore()->getBaseUrl() . 'mercadopago/calculator/popup';
     }
 
-    public function getCurrentProductPrice(){
+    public function getCurrentProductPrice()
+    {
         return $this->_registry->registry('current_product')->getFinalPrice();
     }
 
-    public function getCheckoutCartGrandTotal(){
+    public function getCheckoutCartGrandTotal()
+    {
         return $this->_mysession->getQuote()->getGrandTotal();
     }
 
-    public function getUrlLogo(){
-        return $this->_assetRepo->getUrl("MercadoPago_Core::images/mp_logo.png");
+    public function getUrlLogo()
+    {
+        return $this->_assetRepo->getUrl("images/mp_logo.png");
     }
 
     /**
@@ -112,10 +126,8 @@ class CalculatorLink
      *
      * @return bool
      */
-    public function isHasToShowing($nameLayout){
+    public function isHasToShowing($nameLayout)
+    {
         return $this->isAvailableCalculator() & $this->isPageToShow($nameLayout);
     }
-
-
-
 }

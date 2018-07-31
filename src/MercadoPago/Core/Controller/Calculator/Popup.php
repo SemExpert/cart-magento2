@@ -7,8 +7,7 @@ namespace MercadoPago\Core\Controller\Calculator;
  *
  * @package Mercadopago\Core\Controller\Calculator
  */
-class Popup
-    extends \Magento\Framework\App\Action\Action
+class Popup extends \Magento\Framework\App\Action\Action
 {
 
     /**
@@ -20,9 +19,7 @@ class Popup
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\View\Result\PageFactory $pageFactory,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-
-    )
-    {
+    ) {
         $this->_pageFactory = $pageFactory;
         $this->_scopeConfig = $scopeConfig;
         parent::__construct($context);
@@ -38,5 +35,4 @@ class Popup
         $this->_view->loadLayout(['default', 'mercadopago_calculator_popup']);
         return $this->_pageFactory->create();
     }
-
 }

@@ -6,8 +6,7 @@ namespace MercadoPago\MercadoEnvios\Helper;
  *
  * @package MercadoPago\MercadoEnvios\Helper
  */
-class CarrierData
-    extends Data
+class CarrierData extends Data
 {
     /**
      *
@@ -50,18 +49,32 @@ class CarrierData
     /**
      * @var array
      */
-    protected $_individualDimensions = ['height' => ['mla' => ['min' => '0', 'max' => '70'], 'mlb' => ['min' => '2', 'max' => '105'], 'mlm' => ['min' => '0', 'max' => '80']],
-                                        'width'  => ['mla' => ['min' => '0', 'max' => '70'], 'mlb' => ['min' => '11', 'max' => '105'], 'mlm' => ['min' => '0', 'max' => '80']],
-                                        'length' => ['mla' => ['min' => '0', 'max' => '70'], 'mlb' => ['min' => '16', 'max' => '105'], 'mlm' => ['min' => '0', 'max' => '120']],
-                                        'weight' => ['mla' => ['min' => '0', 'max' => '25000'], 'mlb' => ['min' => '0', 'max' => '30000'], 'mlm' => ['min' => '0', 'max' => '70000']],
+    protected $_individualDimensions = [
+        'height' => [
+            'mla' => ['min' => '0', 'max' => '70'],
+            'mlb' => ['min' => '2', 'max' => '105'],
+            'mlm' => ['min' => '0', 'max' => '80']
+        ],
+        'width'  => [
+            'mla' => ['min' => '0', 'max' => '70'],
+            'mlb' => ['min' => '11', 'max' => '105'],
+            'mlm' => ['min' => '0', 'max' => '80']
+        ],
+        'length' => [
+            'mla' => ['min' => '0', 'max' => '70'],
+            'mlb' => ['min' => '16', 'max' => '105'],
+            'mlm' => ['min' => '0', 'max' => '120']
+        ],
+        'weight' => [
+            'mla' => ['min' => '0', 'max' => '25000'],
+            'mlb' => ['min' => '0', 'max' => '30000'],
+            'mlm' => ['min' => '0', 'max' => '70000']
+        ],
     ];
     /**
      * @var array
      */
-    protected $_globalMaxDimensions = ['mla' => '210',
-                                       'mlb' => '200',
-                                       'mlm' => '347',
-    ];
+    protected $_globalMaxDimensions = ['mla' => '210', 'mlb' => '200', 'mlm' => '347'];
 
     /**
      * @param $items
@@ -97,7 +110,6 @@ class CarrierData
         $bulk = ceil(pow($bulk, 1 / 3));
 
         return $bulk . 'x' . $bulk . 'x' . $bulk . ',' . $weight;
-
     }
 
     /**
@@ -107,7 +119,7 @@ class CarrierData
      * @return int|string
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function _getShippingDimension($item, $type)
+    public function _getShippingDimension($item, $type) // @codingStandardsIgnoreLine
     {
         $attributeMapped = $this->_getConfigAttributeMapped($type);
         if (!empty($attributeMapped)) {
@@ -135,9 +147,12 @@ class CarrierData
     protected function validateProductDimension($dimension, $type, $item)
     {
         $country = $this->scopeConfig->getValue('payment/mercadopago/country');
-        if (empty((int)$dimension) || $dimension > $this->_individualDimensions[$type][$country]['max'] || $dimension < $this->_individualDimensions[$type][$country]['min']) {
+        if (empty((int)$dimension) || $dimension > $this->_individualDimensions[$type][$country]['max']
+            || $dimension < $this->_individualDimensions[$type][$country]['min']) {
             $this->log('Invalid dimension product: PRODUCT ', $item->getData());
-            throw new \Magento\Framework\Exception\LocalizedException(new \Magento\Framework\Phrase('Invalid dimensions product'));
+            throw new \Magento\Framework\Exception\LocalizedException(
+                new \Magento\Framework\Phrase('Invalid dimensions product')
+            );
         }
     }
 
@@ -156,9 +171,14 @@ class CarrierData
             return;
         }
         if (($height + $width + $length) > $this->_globalMaxDimensions[$country]) {
-            $this->log('Invalid dimensions in cart:', ['width' => $width, 'height' => $height, 'length' => $length, 'weight' => $weight,]);
+            $this->log(
+                'Invalid dimensions in cart:',
+                ['width' => $width, 'height' => $height, 'length' => $length, 'weight' => $weight,]
+            );
             $this->_registry->register('mercadoenvios_msg', __('Package exceed maximum dimensions'));
-            throw new \Magento\Framework\Exception\LocalizedException(new \Magento\Framework\Phrase('Invalid dimensions cart'));
+            throw new \Magento\Framework\Exception\LocalizedException(
+                new \Magento\Framework\Phrase('Invalid dimensions cart')
+            );
         }
     }
 
@@ -167,9 +187,10 @@ class CarrierData
      *
      * @return null
      */
-    protected function _getConfigAttributeMapped($type)
+    protected function _getConfigAttributeMapped($type) // @codingStandardsIgnoreLine
     {
-        return (isset($this->getAttributeMapping()[$type]['code'])) ? $this->getAttributeMapping()[$type]['code'] : null;
+        return (isset($this->getAttributeMapping()[$type]['code'])) ?
+            $this->getAttributeMapping()[$type]['code'] : null;
     }
 
     /**
@@ -208,7 +229,6 @@ class CarrierData
 
                 return $unit->getValue();
             }
-
         } elseif ($this->_mapping[$attributeType]['unit'] != self::ME_LENGTH_UNIT) {
             $unit = new \Zend_Measure_Length((float)$value);
             $unit->convertTo(\Zend_Measure_Length::CENTIMETER);
@@ -218,5 +238,4 @@ class CarrierData
 
         return $value;
     }
-
 }

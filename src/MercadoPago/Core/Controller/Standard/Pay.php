@@ -7,8 +7,7 @@ namespace MercadoPago\Core\Controller\Standard;
  *
  * @package Mercadopago\Core\Controller\Standard
  */
-class Pay
-    extends \Magento\Framework\App\Action\Action
+class Pay extends \Magento\Framework\App\Action\Action
 {
     /**
      * @var \MercadoPago\Core\Model\Standard\PaymentFactory
@@ -29,8 +28,7 @@ class Pay
         \Magento\Framework\App\Action\Context $context,
         \MercadoPago\Core\Model\Standard\PaymentFactory $paymentFactory,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-    )
-    {
+    ) {
         $this->_paymentFactory = $paymentFactory;
         $this->_scopeConfig = $scopeConfig;
         parent::__construct($context);
@@ -49,7 +47,10 @@ class Pay
         if ($array_assign['status'] != 400) {
             $resultRedirect->setUrl($array_assign['init_point']);
         } else {
-            $typeCheckout = $this->_scopeConfig->getValue('payment/mercadopago_standard/type_checkout', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            $typeCheckout = $this->_scopeConfig->getValue(
+                'payment/mercadopago_standard/type_checkout',
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            );
             if ($typeCheckout == 'lightbox') {
                 $resultRedirect->setUrl($this->_url->getUrl('mercadopago/standard/failureRedirect'));
             } else {

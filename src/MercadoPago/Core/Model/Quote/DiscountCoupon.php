@@ -6,8 +6,7 @@ namespace MercadoPago\Core\Model\Quote;
  *
  * @package MercadoPago\Core\Model\Quote
  */
-class DiscountCoupon
-    extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
+class DiscountCoupon extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
 {
 
     /**
@@ -22,8 +21,7 @@ class DiscountCoupon
      */
     public function __construct(
         \Magento\Framework\Registry $registry
-    )
-    {
+    ) {
         $this->setCode('discount_coupon');
         $this->_registry = $registry;
     }
@@ -41,7 +39,8 @@ class DiscountCoupon
         $items = $shippingAssignment->getItems();
         $updateFlag = ($this->_registry->registry('mercadopago_discount_amount') !== null);
 
-        return ($address->getAddressType() == \Magento\Customer\Helper\Address::TYPE_SHIPPING && count($items) && $updateFlag);
+        return ($address->getAddressType() == \Magento\Customer\Helper\Address::TYPE_SHIPPING
+            && count($items) && $updateFlag);
     }
 
     /**
@@ -70,8 +69,7 @@ class DiscountCoupon
         \Magento\Quote\Model\Quote $quote,
         \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment,
         \Magento\Quote\Model\Quote\Address\Total $total
-    )
-    {
+    ) {
         $address = $shippingAssignment->getShipping()->getAddress();
 
         if ($this->_getDiscountCondition($address, $shippingAssignment)) {

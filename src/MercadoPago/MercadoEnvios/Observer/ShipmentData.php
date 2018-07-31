@@ -8,8 +8,7 @@ use Magento\Framework\Event\ObserverInterface;
  *
  * @package MercadoPago\MercadoEnvios\Observer
  */
-class ShipmentData
-    implements ObserverInterface
+class ShipmentData implements ObserverInterface
 {
     /**
      * @var \MercadoPago\Core\Model\Core
@@ -35,8 +34,7 @@ class ShipmentData
         \MercadoPago\Core\Model\Core $coreModel,
         \MercadoPago\MercadoEnvios\Helper\Data $shipmentHelper,
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timeZone
-    )
-    {
+    ) {
         $this->coreModel = $coreModel;
         $this->shipmentHelper = $shipmentHelper;
         $this->_timezone = $timeZone;
@@ -60,7 +58,9 @@ class ShipmentData
             $name = $shipmentData['shipping_option']['name'];
             $order->setShippingMethod('mercadoenvios_' . $methodId);
 
-            $estimatedDate = $this->_timezone->formatDate($shipmentData['shipping_option']['estimated_delivery']['date']);
+            $estimatedDate = $this->_timezone->formatDate(
+                $shipmentData['shipping_option']['estimated_delivery']['date']
+            );
             $estimatedDate = __('(estimated date %1)', $estimatedDate);
             $shippingDescription = 'MercadoEnvíos - ' . $name . ' ' . $estimatedDate;
             $order->setShippingDescription($shippingDescription);
@@ -73,5 +73,4 @@ class ShipmentData
             }
         }
     }
-
 }

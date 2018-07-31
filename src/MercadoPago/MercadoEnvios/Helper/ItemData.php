@@ -7,8 +7,7 @@ namespace MercadoPago\MercadoEnvios\Helper;
  *
  * @package MercadoPago\MercadoEnvios\Helper
  */
-class ItemData
-    extends \Magento\Framework\App\Helper\AbstractHelper
+class ItemData extends \Magento\Framework\App\Helper\AbstractHelper
 {
     /**
      * @param $item
@@ -19,7 +18,7 @@ class ItemData
     {
         $children = $item->getChildren();
 
-        return (!empty($children) || in_array('getHasChildren',get_class_methods($item)) && $item->getHasChildren());
+        return (!empty($children) || in_array('getHasChildren', get_class_methods($item)) && $item->getHasChildren());
     }
 
     /**
@@ -32,7 +31,7 @@ class ItemData
         if ($item->getParentItem()) {
             $item = $item->getParentItem();
         }
-        $qty = (in_array('getQty',get_class_methods($item))) ? $item->getQty() : $item->getQtyOrdered();
+        $qty = (in_array('getQty', get_class_methods($item))) ? $item->getQty() : $item->getQtyOrdered();
 
         return $qty;
     }

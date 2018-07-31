@@ -1,15 +1,12 @@
 <?php
 namespace MercadoPago\Core\Controller\Notifications;
 
-
 /**
  * Class Custom
  *
  * @package MercadoPago\Core\Controller\Notifications
  */
-class Custom
-    extends \Magento\Framework\App\Action\Action
-
+class Custom extends \Magento\Framework\App\Action\Action
 {
     /**
      * @var \MercadoPago\Core\Model\Standard\PaymentFactory
@@ -34,7 +31,6 @@ class Custom
      */
     const LOG_NAME = 'custom_notification';
 
-
     /**
      * Standard constructor.
      *
@@ -49,8 +45,7 @@ class Custom
         \MercadoPago\Core\Helper\Data $coreHelper,
         \MercadoPago\Core\Model\Core $coreModel,
         \MercadoPago\Core\Helper\StatusUpdate $statusHelper
-    )
-    {
+    ) {
         $this->_paymentFactory = $paymentFactory;
         $this->coreHelper = $coreHelper;
         $this->coreModel = $coreModel;
@@ -108,7 +103,11 @@ class Custom
         if ($this->_order->getId()) {
             return true;
         }
-        $this->coreHelper->log(\MercadoPago\Core\Helper\Response::INFO_EXTERNAL_REFERENCE_NOT_FOUND, self::LOG_NAME, $this->_requestData->getParams());
+        $this->coreHelper->log(
+            \MercadoPago\Core\Helper\Response::INFO_EXTERNAL_REFERENCE_NOT_FOUND,
+            self::LOG_NAME,
+            $this->_requestData->getParams()
+        );
         $this->getResponse()->getBody(\MercadoPago\Core\Helper\Response::INFO_EXTERNAL_REFERENCE_NOT_FOUND);
         $this->getResponse()->setHttpResponseCode(\MercadoPago\Core\Helper\Response::HTTP_NOT_FOUND);
         $this->coreHelper->log("Http code", self::LOG_NAME, $this->getResponse()->getHttpResponseCode());

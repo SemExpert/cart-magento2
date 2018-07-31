@@ -12,8 +12,7 @@ use Magento\Payment\Helper\Data as PaymentHelper;
  *
  * @package MercadoPago\Core\Model
  */
-class StandardConfigProvider
-    implements ConfigProviderInterface
+class StandardConfigProvider implements ConfigProviderInterface
 {
     /**
      * @var \Magento\Payment\Model\MethodInterface
@@ -44,8 +43,7 @@ class StandardConfigProvider
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \MercadoPago\Core\Helper\Data $coreHelper,
         \Magento\Framework\App\ProductMetadataInterface $productMetadata
-    )
-    {
+    ) {
         $this->methodInstance = $paymentHelper->getMethodInstance($this->methodCode);
         $this->_assetRepo = $assetRepo;
         $this->_scopeConfig = $scopeConfig;
@@ -69,7 +67,10 @@ class StandardConfigProvider
                         'bannerUrl'        => $this->methodInstance->getConfigData('banner_checkout'),
                         'type_checkout'    => $this->methodInstance->getConfigData('type_checkout'),
                         'logoUrl'          => $this->getImageUrl('mp_logo.png'),
-                        'analytics_key'    => $this->_scopeConfig->getValue(\MercadoPago\Core\Helper\Data::XML_PATH_CLIENT_ID, \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                        'analytics_key'    => $this->_scopeConfig->getValue(
+                            \MercadoPago\Core\Helper\Data::XML_PATH_CLIENT_ID,
+                            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                        ),
                         'platform_version' => $this->_productMetaData->getVersion(),
                         'module_version'   => $this->_coreHelper->getModuleVersion()
 
@@ -77,7 +78,8 @@ class StandardConfigProvider
                 ],
             ];
             if ($this->methodInstance->getConfigData('type_checkout') == 'iframe') {
-                $config['payment'][$this->methodCode]['iframe_height'] = $this->methodInstance->getConfigData('iframe_height');
+                $iframeHeight = $this->methodInstance->getConfigData('iframe_height');
+                $config['payment'][$this->methodCode]['iframe_height'] = $iframeHeight;
             }
         }
 

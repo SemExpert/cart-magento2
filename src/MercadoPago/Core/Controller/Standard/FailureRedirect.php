@@ -6,8 +6,7 @@ namespace MercadoPago\Core\Controller\Standard;
  *
  * @package MercadoPago\Core\Controller\Standard
  */
-class FailureRedirect
-    extends \Magento\Framework\App\Action\Action
+class FailureRedirect extends \Magento\Framework\App\Action\Action
 {
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
@@ -21,15 +20,13 @@ class FailureRedirect
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-    )
-    {
+    ) {
 
         $this->_scopeConfig = $scopeConfig;
 
         parent::__construct(
             $context
         );
-
     }
 
     /**
@@ -37,12 +34,14 @@ class FailureRedirect
      */
     public function execute()
     {
-        if (!$this->_scopeConfig->getValue(\MercadoPago\Core\Helper\Data::XML_PATH_USE_SUCCESSPAGE_MP, \Magento\Store\Model\ScopeInterface::SCOPE_STORE)){
+        if (!$this->_scopeConfig->getValue(
+            \MercadoPago\Core\Helper\Data::XML_PATH_USE_SUCCESSPAGE_MP,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        )) {
             $this->_view->loadLayout(['default', 'checkout_onepage_failure']);
-        } else{
+        } else {
             $this->_view->loadLayout(['default', 'mercadopago_standard_failure_lightbox_redirect']);
         }
         $this->_view->renderLayout();
     }
-
 }

@@ -17,10 +17,8 @@ use Magento\Framework\Setup\SchemaSetupInterface;
  *
  * @package MercadoPago\Core\Setup
  */
-class InstallSchema
-    implements InstallSchemaInterface
+class InstallSchema implements InstallSchemaInterface
 {
-
     /**
      * {@inheritdoc}
      */

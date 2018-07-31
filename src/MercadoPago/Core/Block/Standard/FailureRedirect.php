@@ -6,10 +6,10 @@ namespace MercadoPago\Core\Block\Standard;
  *
  * Class FailureRedirect
  *
+ * @api
  * @package MercadoPago\Core\Block\Standard
  */
-class FailureRedirect
-    extends Failure
+class FailureRedirect extends Failure
 {
     /**
      * Set template in constructor method
@@ -19,5 +19,4 @@ class FailureRedirect
         parent::_construct();
         $this->setTemplate('standard/failure_lightbox_redirect.phtml');
     }
-
 }

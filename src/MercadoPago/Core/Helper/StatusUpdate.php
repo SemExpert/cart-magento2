@@ -7,8 +7,7 @@ namespace MercadoPago\Core\Helper;
  * @package MercadoPago\Core\Helper
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class StatusUpdate
-    extends \Magento\Payment\Helper\Data
+class StatusUpdate extends \Magento\Payment\Helper\Data
 {
 
     protected $_finalStatus = ['rejected', 'cancelled', 'refunded', 'charge_back'];
@@ -52,7 +51,6 @@ class StatusUpdate
      */
     protected $_orderSender;
 
-
     protected $_dataHelper;
     protected $_coreHelper;
 
@@ -72,9 +70,16 @@ class StatusUpdate
         \Magento\Framework\DB\TransactionFactory $transactionFactory,
         \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender
-    )
-    {
-        parent::__construct($context, $layoutFactory, $paymentMethodFactory, $appEmulation, $paymentConfig, $initialConfig);
+    ) {
+        parent::__construct(
+            $context,
+            $layoutFactory,
+            $paymentMethodFactory,
+            $appEmulation,
+            $paymentConfig,
+            $initialConfig
+        );
+
         $this->_messageInterface = $messageInterface;
         $this->_orderFactory = $orderFactory;
         $this->_statusFactory = $statusFactory;
@@ -114,7 +119,7 @@ class StatusUpdate
         $currentStatus = $order->getPayment()->getAdditionalInformation('status');
         $currentStatusDetail = $order->getPayment()->getAdditionalInformation('status_detail');
 
-        if (!is_null($order->getPayment()) && $order->getPayment()->getAdditionalInformation('second_card_token')) {
+        if ($order->getPayment() !== null && $order->getPayment()->getAdditionalInformation('second_card_token')) {
             $this->_statusUpdatedFlag = false;
 
             return;
@@ -124,7 +129,7 @@ class StatusUpdate
         }
     }
 
-    protected function _getMulticardLastValue($value)
+    protected function _getMulticardLastValue($value) // @codingStandardsIgnoreLine
     {
         $statuses = explode('|', $value);
 
@@ -141,36 +146,53 @@ class StatusUpdate
     public function getStatusOrder($status, $statusDetail, $isCanCreditMemo)
     {
         switch ($status) {
-            case 'approved': {
-                $status = $this->scopeConfig->getValue('payment/mercadopago/order_status_approved', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            case 'approved':
+                $status = $this->scopeConfig->getValue(
+                    'payment/mercadopago/order_status_approved',
+                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                );
                 if ($statusDetail == 'partially_refunded' && $isCanCreditMemo) {
-                    $status = $this->scopeConfig->getValue('payment/mercadopago/order_status_partially_refunded', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+                    $status = $this->scopeConfig->getValue(
+                        'payment/mercadopago/order_status_partially_refunded',
+                        \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                    );
                 }
                 break;
-            }
-            case 'refunded': {
-                $status = $this->scopeConfig->getValue('payment/mercadopago/order_status_refunded', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            case 'refunded':
+                $status = $this->scopeConfig->getValue(
+                    'payment/mercadopago/order_status_refunded',
+                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                );
                 break;
-            }
-            case 'in_mediation': {
-                $status = $this->scopeConfig->getValue('payment/mercadopago/order_status_in_mediation', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            case 'in_mediation':
+                $status = $this->scopeConfig->getValue(
+                    'payment/mercadopago/order_status_in_mediation',
+                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                );
                 break;
-            }
-            case 'cancelled': {
-                $status = $this->scopeConfig->getValue('payment/mercadopago/order_status_cancelled', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            case 'cancelled':
+                $status = $this->scopeConfig->getValue(
+                    'payment/mercadopago/order_status_cancelled',
+                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                );
                 break;
-            }
-            case 'rejected': {
-                $status = $this->scopeConfig->getValue('payment/mercadopago/order_status_rejected', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            case 'rejected':
+                $status = $this->scopeConfig->getValue(
+                    'payment/mercadopago/order_status_rejected',
+                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                );
                 break;
-            }
-            case 'chargeback': {
-                $status = $this->scopeConfig->getValue('payment/mercadopago/order_status_chargeback', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            case 'chargeback':
+                $status = $this->scopeConfig->getValue(
+                    'payment/mercadopago/order_status_chargeback',
+                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                );
                 break;
-            }
-            default: {
-                $status = $this->scopeConfig->getValue('payment/mercadopago/order_status_in_process', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-            }
+            default:
+                $status = $this->scopeConfig->getValue(
+                    'payment/mercadopago/order_status_in_process',
+                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                );
         }
 
         return $status;
@@ -181,7 +203,7 @@ class StatusUpdate
      *
      * @param string $status
      */
-    public function _getAssignedState($status)
+    public function _getAssignedState($status) // @codingStandardsIgnoreLine
     {
         $collection = $this->_statusFactory
             ->joinStates()
@@ -275,7 +297,7 @@ class StatusUpdate
      *
      * @return int
      */
-    protected function _getLastPaymentIndex($payments, $status)
+    protected function _getLastPaymentIndex($payments, $status) // @codingStandardsIgnoreLine
     {
         $dates = [];
         foreach ($payments as $key => $payment) {
@@ -283,7 +305,7 @@ class StatusUpdate
                 $dates[] = ['key' => $key, 'value' => $payment['last_modified']];
             }
         }
-        usort($dates, ['MercadoPago\Core\Controller\Notifications\Standard', "_dateCompare"]);
+        usort($dates, [\MercadoPago\Core\Controller\Notifications\Standard::class, "_dateCompare"]);
         if ($dates) {
             $lastModified = array_pop($dates);
 
@@ -327,7 +349,7 @@ class StatusUpdate
      * @var $creditMemo \Magento\Sales\Model\Order\Creditmemo
      * @var $payment    \Magento\Sales\Model\Order\Payment
      */
-    protected function _createCreditmemo($order, $data)
+    protected function _createCreditmemo($order, $data) // @codingStandardsIgnoreLine
     {
         $order->setExternalRequest(true);
         $creditMemos = $order->getCreditmemosCollection()->getItems();
@@ -423,7 +445,7 @@ class StatusUpdate
         return $data;
     }
 
-    protected function _updateAtributesData($data, $payment)
+    protected function _updateAtributesData($data, $payment) // @codingStandardsIgnoreLine
     {
         if (isset($payment["last_four_digits"])) {
             if (isset($data["trunc_card"])) {
@@ -495,8 +517,6 @@ class StatusUpdate
                 if (isset($additionalInfo['token'])) {
                     $order->getPayment()->getMethodInstance()->customerAndCards($additionalInfo['token'], $payment);
                 }
-
-
             } elseif ($status == 'refunded' || $status == 'cancelled') {
                 $order->setExternalRequest(true);
                 $order->cancel();
@@ -519,7 +539,7 @@ class StatusUpdate
         }
     }
 
-    protected function _createInvoice($order, $message)
+    protected function _createInvoice($order, $message) // @codingStandardsIgnoreLine
     {
         if (!$order->hasInvoices()) {
             $invoice = $order->prepareInvoice();
@@ -541,14 +561,14 @@ class StatusUpdate
      * @param $message
      * @param $statusDetail
      */
-    protected function _updateStatus($order, $status, $message, $statusDetail)
+    protected function _updateStatus($order, $status, $message, $statusDetail) // @codingStandardsIgnoreLine
     {
         if ($order->getState() !== \Magento\Sales\Model\Order::STATE_COMPLETE) {
             $statusOrder = $this->getStatusOrder($status, $statusDetail, $order->canCreditmemo());
 
             $order->setState($this->_getAssignedState($statusOrder));
             $order->addStatusToHistory($statusOrder, $message, true);
-            if (!$order->getEmailSent()){
+            if (!$order->getEmailSent()) {
                 $this->_orderSender->send($order, true, $message);
             }
         }
@@ -585,7 +605,6 @@ class StatusUpdate
 
                 ];
 
-
                 foreach ($additionalFields as $field) {
                     if (isset($data[$field]) && empty($paymentAdditionalInfo['second_card_token'])) {
                         $paymentOrder->setAdditionalInformation($field, $data[$field]);
@@ -597,7 +616,10 @@ class StatusUpdate
                 }
 
                 if (isset($data['payer_identification_type']) & isset($data['payer_identification_number'])) {
-                    $paymentOrder->setAdditionalInformation($data['payer_identification_type'], $data['payer_identification_number']);
+                    $paymentOrder->setAdditionalInformation(
+                        $data['payer_identification_type'],
+                        $data['payer_identification_number']
+                    );
                 }
 
                 if (isset($data['payment_method_id'])) {
@@ -622,5 +644,4 @@ class StatusUpdate
             }
         }
     }
-
 }

@@ -6,8 +6,7 @@ namespace MercadoPago\Core\Model\System\Config\Source;
  *
  * @package MercadoPago\Core\Model\System\Config\Source
  */
-class Category
-    implements \Magento\Framework\Option\ArrayInterface
+class Category implements \Magento\Framework\Option\ArrayInterface
 {
     /**
      * @var \MercadoPago\Core\Helper\Data
@@ -25,8 +24,7 @@ class Category
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \MercadoPago\Core\Helper\Data $coreHelper
-    )
-    {
+    ) {
         $this->scopeConfig = $scopeConfig;
         $this->coreHelper = $coreHelper;
     }
@@ -48,7 +46,7 @@ class Category
 
         $response = $response['response'];
 
-        $cat = array();
+        $cat =  [];
         $count = 0;
         foreach ($response as $v) {
             //force category others first
@@ -58,7 +56,6 @@ class Category
                 $count++;
                 $cat[$count] = ['value' => $v['id'], 'label' => __($v['description'])];
             }
-
         };
 
         //force order by key
@@ -66,5 +63,4 @@ class Category
 
         return $cat;
     }
-
 }

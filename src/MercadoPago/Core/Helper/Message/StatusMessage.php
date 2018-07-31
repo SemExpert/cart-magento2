@@ -4,8 +4,7 @@ namespace MercadoPago\Core\Helper\Message;
 /**
  * Payment response user friendly messages
  */
-class StatusMessage
-    extends AbstractMessage
+class StatusMessage extends AbstractMessage
 {
     /**
      * mapps messages by status
@@ -20,7 +19,8 @@ class StatusMessage
 
         "in_process" => [
             'title'   => 'We are processing the payment.',
-            'message' => 'In less than 2 business days we will tell you by e-mail if it is accredited or if we need more information.'
+            'message' => 'In less than 2 business days we will tell you by e-mail if it is accredited or if we need '
+                . 'more information.'
         ],
 
         "authorized" => [

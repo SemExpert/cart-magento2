@@ -12,24 +12,25 @@ $info_payment = $this->getInfoPayment();
 
 <div id="box-mercadopago">
 
-    <?php if ($payment_method == 'mercadopago_customticket'): ?>
-        <h2 class="mercadopago-title"><?php /* @escapeNotVerified */ echo __('Thank you for your purchase!'); ?></h2>
+    <?php if ($payment_method == 'mercadopago_customticket') : ?>
+        <h2 class="mercadopago-title"><?= /* @escapeNotVerified */ __('Thank you for your purchase!'); ?></h2>
 
         <p>
-            <?php /* @escapeNotVerified */ echo __(
+            <?= /* @escapeNotVerified */ __(
                 'Your order %1 has been successfully generated.',
-                '<a href="' . $block->escapeUrl($this->getOrderUrl()) . '">' . $block->escapeHtml($order->getIncrementId()) . '</a>'
+                '<a href="' . $block->escapeUrl($this->getOrderUrl()) . '">'
+                . $block->escapeHtml($order->getIncrementId()) . '</a>'
             ); ?>
         </p>
 
         <p>
-            <?php echo 'Generate the ticket and pay it wherever you want.'; ?>
+            <?= 'Generate the ticket and pay it wherever you want.'; ?>
         </p><p>
-            <?php /* @escapeNotVerified */ echo __('Will be approved within 2 business days.'); ?>
+            <?= /* @escapeNotVerified */ __('Will be approved within 2 business days.'); ?>
         </p>
-        <a href="<?php echo $block->escapeUrl(urldecode($payment->getAdditionalInformation('activation_uri'))); ?>"
+        <a href="<?= $block->escapeUrl(urldecode($payment->getAdditionalInformation('activation_uri'))); ?>"
            target="_blank" id="btn-boleto-mercadopago">
-            <?php /* @escapeNotVerified */ echo __('Generate Ticket'); ?>
+            <?= /* @escapeNotVerified */ __('Generate Ticket'); ?>
         </a>
 
     <?php endif; ?>
@@ -41,5 +42,7 @@ $info_payment = $this->getInfoPayment();
 </div>
 
 <div class="primary button-success">
-    <a class="action primary continue" href="<?php echo $block->escapeUrl($block->getUrl()) ?>"><span><?php /* @escapeNotVerified */ echo __('Continue Shopping') ?></span></a>
+    <a class="action primary continue" href="<?= $block->escapeUrl($block->getUrl()) ?>">
+        <span><?= /* @escapeNotVerified */ __('Continue Shopping') ?></span>
+    </a>
 </div>

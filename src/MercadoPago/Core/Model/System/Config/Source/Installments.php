@@ -6,8 +6,7 @@ namespace MercadoPago\Core\Model\System\Config\Source;
  *
  * @package MercadoPago\Core\Model\System\Config\Source
  */
-class Installments
-    implements \Magento\Framework\Option\ArrayInterface
+class Installments implements \Magento\Framework\Option\ArrayInterface
 {
 
     /**
@@ -32,5 +31,4 @@ class Installments
 
         return $installment;
     }
-
 }

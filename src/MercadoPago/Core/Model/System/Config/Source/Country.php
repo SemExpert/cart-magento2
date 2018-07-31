@@ -6,8 +6,7 @@ namespace MercadoPago\Core\Model\System\Config\Source;
  *
  * @package MercadoPago\Core\Model\System\Config\Source
  */
-class Country
-    implements \Magento\Framework\Option\ArrayInterface
+class Country implements \Magento\Framework\Option\ArrayInterface
 {
     /**
      * Return available country array
@@ -30,5 +29,4 @@ class Country
 
         return $country;
     }
-
 }

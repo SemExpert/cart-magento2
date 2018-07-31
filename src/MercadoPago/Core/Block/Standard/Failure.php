@@ -6,10 +6,10 @@ namespace MercadoPago\Core\Block\Standard;
  *
  * Class Failure
  *
+ * @api
  * @package MercadoPago\Core\Block\Standard
  */
-class Failure
-    extends \Magento\Framework\View\Element\Template
+class Failure extends \Magento\Framework\View\Element\Template
 {
     /**
      * Set template in constructor method
@@ -29,5 +29,4 @@ class Failure
     {
         return $this->_storeManager->getStore()->getBaseUrl();
     }
-
 }

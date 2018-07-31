@@ -1,16 +1,13 @@
 <?php
 namespace MercadoPago\MercadoEnvios\Helper;
 
-
 /**
  * Class Data
  *
  * @package MercadoPago\MercadoEnvios\Helper
  */
-class Data
-    extends \Magento\Framework\App\Helper\AbstractHelper
+class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
-
     /**
      *
      */
@@ -78,12 +75,10 @@ class Data
      */
     protected $_shipment;
 
-
     /**
      * @var array
      */
     public static $enabled_methods = ['mla', 'mlb', 'mlm'];
-
 
     /**
      * @var \Magento\Framework\Registry
@@ -112,8 +107,7 @@ class Data
         \Magento\Sales\Model\Order\Shipment\TrackFactory $trackFactory,
         \Magento\Sales\Model\Order\Shipment $shipment,
         \Magento\Framework\Registry $registry
-    )
-    {
+    ) {
         parent::__construct($context);
         $this->_checkoutSession = $checkoutSession;
         $this->_productFactory = $productFactory;
@@ -123,10 +117,7 @@ class Data
         $this->_trackFactory = $trackFactory;
         $this->_shipment = $shipment;
         $this->_registry = $registry;
-
     }
-
-    
 
     /**
      * Retrieves Quote
@@ -150,7 +141,6 @@ class Data
         return ($shippingMethod == \MercadoPago\MercadoEnvios\Model\Carrier\MercadoEnvios::CODE);
     }
 
-
     /**
      * @param $request
      *
@@ -158,12 +148,22 @@ class Data
      */
     public function getFreeMethod($request)
     {
-        $freeMethod = $this->scopeConfig->getValue('carriers/mercadoenvios/free_method',\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $freeMethod = $this->scopeConfig->getValue(
+            'carriers/mercadoenvios/free_method',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
         if (!empty($freeMethod)) {
-            if (!$this->scopeConfig->isSetFlag('carriers/mercadoenvios/free_shipping_enable',\Magento\Store\Model\ScopeInterface::SCOPE_STORE)) {
+            if (!$this->scopeConfig->isSetFlag(
+                'carriers/mercadoenvios/free_shipping_enable',
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            )) {
                 return $freeMethod;
             } else {
-                if ($this->scopeConfig->getValue('carriers/mercadoenvios/free_shipping_subtotal',\Magento\Store\Model\ScopeInterface::SCOPE_STORE) <= $request->getPackageValue()) {
+                $freeShippingThreshold = $this->scopeConfig->getValue(
+                    'carriers/mercadoenvios/free_shipping_subtotal',
+                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                );
+                if ($freeShippingThreshold <= $request->getPackageValue()) {
                     return $freeMethod;
                 }
             }
@@ -177,7 +177,13 @@ class Data
      */
     public function isCountryEnabled()
     {
-        return (in_array($this->scopeConfig->getValue('payment/mercadopago/country',\Magento\Store\Model\ScopeInterface::SCOPE_STORE), self::$enabled_methods));
+        return (in_array(
+            $this->scopeConfig->getValue(
+                'payment/mercadopago/country',
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            ),
+            self::$enabled_methods
+        ));
     }
 
     /**
@@ -202,7 +208,8 @@ class Data
             ->load();
 
         foreach ($tracking->getData() as $track) {
-            if (isset($track['carrier_code']) && $track['carrier_code'] == \MercadoPago\MercadoEnvios\Model\Carrier\MercadoEnvios::CODE) {
+            if (isset($track['carrier_code'])
+                && $track['carrier_code'] == \MercadoPago\MercadoEnvios\Model\Carrier\MercadoEnvios::CODE) {
                     return $track['description'];
             }
         }
@@ -294,18 +301,21 @@ class Data
      */
     public function log($message, $array = null, $level = \Monolog\Logger::ALERT, $file = "mercadoenvios.log")
     {
-        $actionLog = $this->scopeConfig->getValue('carriers/mercadoenvios/log',\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $actionLog = $this->scopeConfig->getValue(
+            'carriers/mercadoenvios/log',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
         if (!$actionLog) {
             return;
         }
         //if extra data is provided, it's encoded for better visualization
-        if (!is_null($array)) {
+        if (isset($array)) {
             $message .= " - " . json_encode($array);
         }
 
         //set log
         $this->_mpLogger->setName($file);
-        $this->_mpLogger->log($level,$message);
+        $this->_mpLogger->log($level, $message);
     }
 
     /**

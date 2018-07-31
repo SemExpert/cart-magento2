@@ -8,8 +8,7 @@ use Magento\Framework\Event\ObserverInterface;
  *
  * @package MercadoPago\MercadoEnvios\Observer
  */
-class Shipment
-    implements ObserverInterface
+class Shipment implements ObserverInterface
 {
     /**
      *
@@ -64,8 +63,7 @@ class Shipment
         \Magento\Sales\Model\Order\ShipmentFactory $shipmentFactory,
         \Magento\Sales\Model\Order\Shipment\TrackFactory $trackFactory,
         \Magento\Framework\DB\Transaction $transaction
-    )
-    {
+    ) {
         $this->_coreHelper = $coreHelper;
         $this->_coreModel = $coreModel;
         $this->_shipmentHelper = $shipmentHelper;
@@ -102,11 +100,18 @@ class Shipment
 
             $shipmentInfo = $this->_shipmentHelper->getShipmentInfo($merchantOrder['shipments'][0]['id']);
             $this->_coreHelper->log("Shipment Info", 'mercadopago-notification.log', $shipmentInfo);
-            $serviceInfo = $this->_shipmentHelper->getServiceInfo($merchantOrder['shipments'][0]['service_id'], $merchantOrder['site_id']);
+            $serviceInfo = $this->_shipmentHelper->getServiceInfo(
+                $merchantOrder['shipments'][0]['service_id'],
+                $merchantOrder['site_id']
+            );
             $this->_coreHelper->log("Service Info by service id", 'mercadopago-notification.log', $serviceInfo);
             if ($shipmentInfo && isset($shipmentInfo->tracking_number)) {
                 $tracking['number'] = $shipmentInfo->tracking_number;
-                $tracking['description'] = str_replace('#{trackingNumber}', $shipmentInfo->tracking_number, $serviceInfo->tracking_url);
+                $tracking['description'] = str_replace(
+                    '#{trackingNumber}',
+                    $shipmentInfo->tracking_number,
+                    $serviceInfo->tracking_url
+                );
                 $tracking['title'] = self::CODE;
 
                 $existingTracking = $this->_trackFactory->create()->load($shipment->getOrderId(), 'order_id');
@@ -133,5 +138,4 @@ class Shipment
                 ->save();
         }
     }
-
 }
