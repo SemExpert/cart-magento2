@@ -139,7 +139,12 @@ class OrderUpdate
      */
     protected function _updateOrder($order, $statusOrder, $paymentOrder)
     {
-        $order->setState($this->_statusHelper->_getAssignedState($statusOrder));
+        if($statusOrder == 'canceled'){
+            $order->cancel();
+        }else{
+            $order->setState($this->_statusHelper->_getAssignedState($statusOrder));
+        }
+
         $order->addStatusToHistory($statusOrder, $this->_statusHelper->getMessage($statusOrder, $statusOrder), true);
         $order->sendOrderUpdateEmail(true, $this->_statusHelper->getMessage($statusOrder, $paymentOrder));
         $order->save();

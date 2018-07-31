@@ -6,13 +6,15 @@
 var config = {
     map: {
         '*': {
-            MPcheckout: 'https://www.mercadopago.com/org-img/jsapi/mptools/buttons/render.js',
+            MPcheckout: 'https://secure.mlstatic.com/mptools/render.js',
             MPcustom: 'https://secure.mlstatic.com/sdk/javascript/v1/mercadopago.js',
             MPanalytics: 'https://secure.mlstatic.com/modules/javascript/analytics.js',
             meli: 'MercadoPago_Core/js/mercadopago',
             tinyj: 'MercadoPago_Core/js/tinyJ',
             tiny: 'MercadoPago_Core/js/tiny.min',
-            calculator: 'MercadoPago_Core/js/mercadopago_calculator'
+            calculator: 'MercadoPago_Core/js/mercadopago_calculator',
+            MPv1: 'MercadoPago_Core/js/MPv1',
+            MPv1Ticket: 'MercadoPago_Core/js/MPv1Ticket'
         }
     }
 };

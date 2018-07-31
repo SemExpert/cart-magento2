@@ -141,9 +141,9 @@ class Standard extends \Magento\Framework\App\Action\Action
             $statusFinal = $data['status'];
 
             // TODO: check and test if IPN updates the payment informaiton
-            $response = $this->coreModel->getPaymentV1($id);
-            $payment = $response['response'];
-            $payment = $this->coreHelper->setPayerInfo($payment);
+            // $response = $this->coreModel->getPaymentV1($id);	
+            // $payment = $response['response'];	
+            // $payment = $this->coreHelper->setPayerInfo($payment);
         } else {
             $this->_responseLog();
 

@@ -68,7 +68,10 @@ class Coupon extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
-        $coupon_id = $this->getRequest()->getParam('id');
+        $coupon_id = $this->getRequest()->getParam('coupon_id');
+
+        $this->coreHelper->log("execute discount: " . $coupon_id, 'mercadopago-custom.log');
+
         if (!empty($coupon_id)) {
             $response = $this->coreModel->validCoupon($coupon_id);
         } else {

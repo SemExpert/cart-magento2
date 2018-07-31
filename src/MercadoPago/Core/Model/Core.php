@@ -490,9 +490,10 @@ class Core extends \Magento\Payment\Model\Method\AbstractMethod
         /* INIT PREFERENCE */
         $preference = [];
 
+
         // Check if notification URL contains localhost
         $notification_url = $this->_urlBuilder->getUrl('mercadopago/notifications/custom');
-        if (isset($notification_url)) {
+        if ( isset( $notification_url ) && ! strrpos( $notification_url, 'localhost' ) ) {
             $preference['notification_url'] = $notification_url;
         }
 
@@ -502,15 +503,11 @@ class Core extends \Magento\Payment\Model\Method\AbstractMethod
             $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK)
         );
 
-        if (isset($paymentInfo['transaction_amount'])) {
-            $preference['transaction_amount'] = (float)$paymentInfo['transaction_amount'];
-        } else {
-            $preference['transaction_amount'] = (float)$this->getAmount();
-        }
-
+        $preference['transaction_amount'] = (float) $this->getAmount();
         $preference['transaction_amount'] = round($preference['transaction_amount'], 2);
 
         $preference['external_reference'] = $order->getIncrementId();
+        
         $preference['payer']['email'] = $customerInfo['email'];
 
         if (!empty($paymentInfo['identification_type'])) {
@@ -562,12 +559,16 @@ class Core extends \Magento\Payment\Model\Method\AbstractMethod
             $preference['campaign_id'] = $couponInfo['campaign_id'];
         }
 
+        $this->_coreHelper->log("==> makeDefaultPreferencePaymentV1 -> preference", 'mercadopago-standard.log', $preference);
+
+        $this->_coreHelper->log("==> makeDefaultPreferencePaymentV1", 'mercadopago-standard.log', $paymentInfo);
         $sponsorId = $this->_scopeConfig->getValue(
             'payment/mercadopago/sponsor_id',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
+
         $this->_coreHelper->log("Sponsor_id", 'mercadopago-standard.log', $sponsorId);
-        if (!empty($sponsorId)) {
+        if (!empty($sponsorId) && strpos( $customerInfo['email'], "@testuser.com" ) === false) {
             $this->_coreHelper->log("Sponsor_id identificado", 'mercadopago-custom.log', $sponsorId);
             $preference['sponsor_id'] = (int)$sponsorId;
         }
@@ -586,7 +587,6 @@ class Core extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function postPaymentV1($preference)
     {
-
         //get access_token
         if (!$this->_accessToken) {
             $this->_accessToken = $this->_scopeConfig->getValue(
@@ -599,6 +599,7 @@ class Core extends \Magento\Payment\Model\Method\AbstractMethod
         //set sdk php mercadopago
         $mp = $this->_coreHelper->getApiInstance($this->_accessToken);
         $response = $mp->post("/v1/payments", $preference);
+        
         $this->_coreHelper->log("POST /v1/payments", 'mercadopago-custom.log', $response);
 
         if ($response['status'] == 200 || $response['status'] == 201) {
@@ -740,6 +741,7 @@ class Core extends \Magento\Payment\Model\Method\AbstractMethod
         if (!$quote) {
             $quote = $this->_getQuote();
         }
+
         $total = $quote->getBaseSubtotalWithDiscount() + $quote->getShippingAddress()->getShippingAmount()
             + $quote->getShippingAddress()->getBaseTaxAmount();
 
@@ -763,19 +765,21 @@ class Core extends \Magento\Payment\Model\Method\AbstractMethod
             );
         }
 
+        $transaction_amount = $this->getAmount();
+        $payer_email = $this->getEmailCustomer();
+        $coupon_code = $id;
+
         $mp = $this->_coreHelper->getApiInstance($this->_accessToken);
 
-        $params = [
-            "transaction_amount" => $this->getAmount(),
-            "payer_email"        => $this->getEmailCustomer(),
-            "coupon_code"        => $id
-        ];
-
-        $details_discount = $mp->get("/discount_campaigns", $params);
+        $details_discount = $mp->check_discount_campaigns($transaction_amount, $payer_email, $coupon_code);
 
         //add value on return api discount
-        $details_discount['response']['transaction_amount'] = $params['transaction_amount'];
-        $details_discount['response']['params'] = $params;
+        $details_discount['response']['transaction_amount'] = $transaction_amount;
+        $details_discount['response']['params'] = array(
+            "transaction_amount" => $transaction_amount,
+            "payer_email"        => $payer_email,
+            "coupon_code"        => $coupon_code
+        );
 
         return $details_discount;
     }

@@ -63,9 +63,14 @@ class PaymentMethods implements \Magento\Framework\Option\ArrayInterface
             $this->_switcher->getWebsiteId()
         );
         $meHelper = $this->coreHelper;
+  
+  
+        if (empty($accessToken) || (empty($clientId) && empty($clientSecret)) ) {
+          return $methods;
+        }
 
-        if (empty($accessToken) && !$meHelper->isValidClientCredentials($clientId, $clientSecret)) {
-            return $methods;
+        if (!$meHelper->isValidClientCredentials($clientId, $clientSecret)) {
+          return $methods;
         }
 
         //if accessToken is empty uses clientId and clientSecret to obtain it

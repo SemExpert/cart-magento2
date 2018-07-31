@@ -7,12 +7,13 @@
     $payment = $this->getPayment();
     
     //monta link para o pedido
-    $link_to_order = '<a href="' . $block->escapeUrl($this->getOrderUrl()) . '">'
-        . $block->escapeHtml($order->getIncrementId()) . '</a>';
     $successMsg = 'Your order %1 has been successfully generated.';
+    $link_to_order = '<a href="' . $block->escapeUrl($this->getOrderUrl()) . '">' 
+        . $block->escapeHtml($order->getIncrementId()) . '</a>';
     
     $payment_method = $this->getPaymentMethod();
     $info_payment = $this->getInfoPayment();
+
 ?>
 
 <div id="box-mercadopago">
@@ -32,9 +33,11 @@
         ?>
         <h2 class="mercadopago-title"><?= $block->escapeHtml($message_status['title']); ?></h2>
 
-        <p><?= $block->escapeHtml($message_status['message']); ?></p>
-
-        <p><?= /* @escapeNotVerified */ __($successMsg, $link_to_order); ?></p>
+        <p><?php echo $block->escapeHtml($message_status['message']); ?></p>
+    
+        <?php if($info_payment['status']['value'] != 'rejected'): ?>
+            <p><?php /* @escapeNotVerified */ echo __($successMsg, $link_to_order); ?></p>            
+        <?php endif; ?>
 
         <h3 class="mercadopago-title-info-payment"><?= /* @escapeNotVerified */ __('Payment information'); ?></h3>
 
@@ -51,8 +54,9 @@
 
 
 <div class="primary button-success">
-    <a class="action primary continue" href="<?= $block->escapeUrl($block->getUrl()) ?>">
-        <span><?= /* @escapeNotVerified */ __('Continue Shopping') ?></span>
-    </a>
+    <?php if($info_payment['status']['value'] == 'rejected'): ?>
+        <a class="action primary continue" href="<?php echo $block->escapeUrl($block->getReOrderUrl()) ?>"><span><?php /* @escapeNotVerified */ echo __('Retry order') ?></span></a> 
+    <?php else: ?>
+        <a class="action primary continue" href="<?php echo $block->escapeUrl($block->getUrl()) ?>"><span><?php /* @escapeNotVerified */ echo __('Continue Shopping') ?></span></a>    
+    <?php endif; ?>
 </div>
-

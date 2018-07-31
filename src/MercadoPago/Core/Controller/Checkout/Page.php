@@ -110,7 +110,6 @@ class Page extends \Magento\Framework\App\Action\Action
         )) {
             $order = $this->_getOrder();
             $infoPayment = $this->_core->getInfoPaymentByOrder($order->getIncrementId());
-
             $status = null;
 
             //checkout Custom Credit Card
@@ -118,6 +117,7 @@ class Page extends \Magento\Framework\App\Action\Action
                 $status = $infoPayment['status']['value'];
                 //$detail = $infoPayment['status_detail']['value'];
             }
+
             //checkout redirect
             if ($status == 'approved' || $status == 'pending') {
                 $this->_redirect('checkout/onepage/success');
