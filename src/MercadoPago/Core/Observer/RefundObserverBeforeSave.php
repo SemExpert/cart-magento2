@@ -9,8 +9,7 @@ use Magento\Framework\Event\ObserverInterface;
  *
  * @package MercadoPago\Core\Observer
  */
-class RefundObserverBeforeSave
-    implements ObserverInterface
+class RefundObserverBeforeSave implements ObserverInterface
 {
 
     const XML_PATH_ACCESS_TOKEN = 'payment/mercadopago_custom/access_token';
@@ -50,13 +49,11 @@ class RefundObserverBeforeSave
         \Magento\Framework\App\Action\Context               $context,
         \MercadoPago\Core\Helper\Data                       $dataHelper,
         \Magento\Framework\App\Config\ScopeConfigInterface  $scopeConfig
-    )
-    {
+    ) {
         $this->_session = $session;
         $this->_messageManager = $context->getMessageManager();
         $this->_dataHelper = $dataHelper;
         $this->_scopeConfig = $scopeConfig;
-
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer)
@@ -76,12 +73,12 @@ class RefundObserverBeforeSave
 
         $paymentMethod = $order->getPayment()->getMethodInstance()->getCode();
         if (!($paymentMethod == 'mercadopago_standard' || $paymentMethod == 'mercadopago_custom')) {
-
             return;
         }
 
         if ($order->getExternalRequest()) {
-            return; // si la peticion de crear un credit memo viene de mercado pago, no hace falta mandar el request nuevamente
+            // si la peticion de crear un credit memo viene de mercado pago, no hace falta mandar el request nuevamente
+            return;
         }
 
         $orderStatus = $order->getData('status');
@@ -90,7 +87,7 @@ class RefundObserverBeforeSave
 
         $paymentMethod = $order->getPayment()->getMethodInstance()->getCode();
         $orderStatusHistory = $order->getAllStatusHistory();
-        $isCreditCardPayment = ($order->getPayment()->getData('additional_information')['installments'] != null ? true : false);
+        $isCreditCardPayment = $order->getPayment()->getData('additional_information')['installments'] != null;
 
         $paymentDate = null;
         foreach ($orderStatusHistory as $status) {
@@ -105,19 +102,17 @@ class RefundObserverBeforeSave
         $isValidBasicData = $this->checkRefundBasicData($paymentMethod, $paymentDate);
         if ($isValidBasicData) {
             $isValidaData = $this->checkRefundData(
-                                $isCreditCardPayment,
-                                $orderStatus,
-                                $orderPaymentStatus,
-                                $paymentDate,
-                                $order
-                            );
+                $isCreditCardPayment,
+                $orderStatus,
+                $orderPaymentStatus,
+                $paymentDate,
+                $order
+            );
 
             if ($isValidBasicData && $isValidaData) {
                 $this->sendRefundRequest($order, $creditMemo, $paymentMethod, $isTotalRefund);
             }
         }
-
-
     }
 
     /**
@@ -135,19 +130,25 @@ class RefundObserverBeforeSave
         );
 
         if (!$refundAvailable) {
-            $this->_messageManager->addNoticeMessage(__('Mercado Pago refunds are disabled. The refund will be made through Magento'));
+            $this->_messageManager->addNoticeMessage(
+                __('Mercado Pago refunds are disabled. The refund will be made through Magento')
+            );
 
             return false;
         }
 
         if ($paymentDate == null) {
-            $this->_messageManager->addErrorMessage(__('No payment is recorded. You can\'t make a refund on a unpaid order'));
+            $this->_messageManager->addErrorMessage(
+                __('No payment is recorded. You can\'t make a refund on a unpaid order')
+            );
 
             return false;
         }
 
         if (!($paymentMethod == 'mercadopago_standard' || $paymentMethod == 'mercadopago_custom')) {
-            $this->_messageManager->addErrorMessage(__('Order payment wasn\'t made by Mercado Pago. The refund will be made through Magento'));
+            $this->_messageManager->addErrorMessage(
+                __('Order payment wasn\'t made by Mercado Pago. The refund will be made through Magento')
+            );
 
             return false;
         }
@@ -165,12 +166,13 @@ class RefundObserverBeforeSave
      * @return bool
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function checkRefundData($isCreditCardPayment,
-                                       $orderStatus,
-                                       $orderPaymentStatus,
-                                       $paymentDate,
-                                       $order)
-    {
+    protected function checkRefundData(
+        $isCreditCardPayment,
+        $orderStatus,
+        $orderPaymentStatus,
+        $paymentDate,
+        $order
+    ) {
 
         $maxDays = $this->_scopeConfig->getValue(
             \MercadoPago\Core\Helper\Data::XML_PATH_MAXIMUM_DAYS_REFUND,
@@ -192,12 +194,16 @@ class RefundObserverBeforeSave
         }
 
         if (!($orderStatus == 'processing' || $orderStatus == 'completed')) {
-            $this->_messageManager->addErrorMessage(__('You can only make refunds on orders whose status is Processing or Completed'));
+            $this->_messageManager->addErrorMessage(
+                __('You can only make refunds on orders whose status is Processing or Completed')
+            );
             $isValidaData = false;
         }
 
         if (!($orderPaymentStatus == 'approved')) {
-            $this->_messageManager->addErrorMessage(__('You can only make refunds on orders whose payment status Approved'));
+            $this->_messageManager->addErrorMessage(
+                __('You can only make refunds on orders whose payment status Approved')
+            );
             $isValidaData = false;
         }
 
@@ -209,7 +215,9 @@ class RefundObserverBeforeSave
 
         if (!(count($order->getCreditmemosCollection()->getItems()) < $maxRefunds)) {
             $isValidaData = false;
-            $this->_messageManager->addErrorMessage(__('You can only make ' . $maxRefunds . ' partial refunds on the same order'));
+            $this->_messageManager->addErrorMessage(
+                __('You can only make ' . $maxRefunds . ' partial refunds on the same order')
+            );
         }
 
         if (!$isValidaData) {
@@ -262,11 +270,18 @@ class RefundObserverBeforeSave
                     "amount"   => $amount,
                     "metadata" => $metadata,
                 ];
-                $response = $mp->post('/collections/' . $paymentID . '/refunds?access_token=' . $mp->get_access_token(), $params);
+
+                $response = $mp->post(
+                    '/collections/' . $paymentID . '/refunds?access_token=' . $mp->get_access_token(),
+                    $params
+                );
             }
         } else {
             $paymentID = $order->getPayment()->getData('additional_information')['payment_method_id'];
-            $accessToken = $this->_scopeConfig->getValue(self::XML_PATH_ACCESS_TOKEN, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            $accessToken = $this->_scopeConfig->getValue(
+                self::XML_PATH_ACCESS_TOKEN,
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            );
             $mp = $this->_dataHelper->getApiInstance($accessToken);
             if ($isTotalRefund) {
                 $response = $mp->post("/v1/payments/$paymentID/refunds?access_token=$accessToken", null);
@@ -293,7 +308,9 @@ class RefundObserverBeforeSave
      */
     protected function throwRefundException()
     {
-        throw new \Magento\Framework\Exception\LocalizedException(new \Magento\Framework\Phrase('Mercado Pago - Refund not made'));
+        throw new \Magento\Framework\Exception\LocalizedException(
+            new \Magento\Framework\Phrase('Mercado Pago - Refund not made')
+        );
     }
 
     /**

@@ -6,8 +6,7 @@ namespace MercadoPago\Core\Controller\Customticket;
  *
  * @package MercadoPago\Core\Controller\Customticket
  */
-class Success
-    extends \Magento\Framework\App\Action\Action
+class Success extends \Magento\Framework\App\Action\Action
 {
     /**
      * @var \Magento\Checkout\Model\Session
@@ -30,8 +29,7 @@ class Success
         \Magento\Framework\App\Action\Context $context,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Sales\Model\OrderFactory $orderFactory
-    )
-    {
+    ) {
 
         $this->_checkoutSession = $checkoutSession;
         $this->_orderFactory = $orderFactory;
@@ -39,7 +37,6 @@ class Success
         parent::__construct(
             $context
         );
-
     }
 
     /**

@@ -4,14 +4,12 @@ namespace MercadoPago\Core\Controller\Checkout;
 
 use MercadoPago\Core\Model\Core;
 
-
 /**
  * Class Success
  *
  * @package MercadoPago\Core\Controller\Success
  */
-class Page
-    extends \Magento\Framework\App\Action\Action
+class Page extends \Magento\Framework\App\Action\Action
 {
     /**
      * @var \Magento\Checkout\Model\Session
@@ -74,8 +72,7 @@ class Page
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \MercadoPago\Core\Model\Core $core,
         \Magento\Catalog\Model\Session $catalogSession
-    )
-    {
+    ) {
 
         $this->_checkoutSession = $checkoutSession;
         $this->_orderFactory = $orderFactory;
@@ -89,7 +86,6 @@ class Page
         parent::__construct(
             $context
         );
-
     }
 
     /**
@@ -108,8 +104,10 @@ class Page
      */
     public function execute()
     {
-        if (!$this->_scopeConfig->getValue(\MercadoPago\Core\Helper\Data::XML_PATH_USE_SUCCESSPAGE_MP, \Magento\Store\Model\ScopeInterface::SCOPE_STORE)){
-
+        if (!$this->_scopeConfig->getValue(
+            \MercadoPago\Core\Helper\Data::XML_PATH_USE_SUCCESSPAGE_MP,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        )) {
             $order = $this->_getOrder();
             $infoPayment = $this->_core->getInfoPaymentByOrder($order->getIncrementId());
 
@@ -121,12 +119,11 @@ class Page
                 //$detail = $infoPayment['status_detail']['value'];
             }
             //checkout redirect
-            if ($status == 'approved' || $status == 'pending'){
+            if ($status == 'approved' || $status == 'pending') {
                 $this->_redirect('checkout/onepage/success');
             } else {
                 $this->_redirect('checkout/onepage/failure/');
             }
-
         } else {
             //set data for mp analytics
             $this->_catalogSession->setPaymentData($this->_helperData->getAnalyticsData($this->_getOrder()));
@@ -139,7 +136,6 @@ class Page
             );
             $this->_view->renderLayout();
         }
-
     }
 
     /**

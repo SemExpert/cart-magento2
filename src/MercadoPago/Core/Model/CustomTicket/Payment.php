@@ -7,8 +7,7 @@ namespace MercadoPago\Core\Model\CustomTicket;
  *
  * @package MercadoPago\Core\Model\CustomTicket
  */
-class Payment
-    extends \MercadoPago\Core\Model\Custom\Payment
+class Payment extends \MercadoPago\Core\Model\Custom\Payment
 {
     /**
      * Define payment method code
@@ -30,14 +29,16 @@ class Payment
         $response = $this->preparePostPayment();
 
         if ($response !== false) {
-            $this->getInfoInstance()->setAdditionalInformation('activation_uri', $response['response']['transaction_details']['external_resource_url']);
+            $this->getInfoInstance()->setAdditionalInformation(
+                'activation_uri',
+                $response['response']['transaction_details']['external_resource_url']
+            );
             $this->setOrderSubtotals($response['response']);
             return true;
         }
 
         return false;
     }
-
 
     public function preparePostPayment($usingSecondCardInfo = null)
     {
@@ -46,13 +47,13 @@ class Payment
         $order = $this->getInfoInstance()->getOrder();
         $payment = $order->getPayment();
 
-        $payment_info = array();
+        $payment_info = [];
 
         if ($payment->getAdditionalInformation("coupon_code") != "") {
             $payment_info['coupon_code'] = $payment->getAdditionalInformation("coupon_code");
         }
 
-        $preference = $this->_coreModel->makeDefaultPreferencePaymentV1($payment_info,$quote,$order);
+        $preference = $this->_coreModel->makeDefaultPreferencePaymentV1($payment_info, $quote, $order);
 
         $preference['payment_method_id'] = $payment->getAdditionalInformation("payment_method");
 
@@ -69,11 +70,10 @@ class Payment
      * @param \Magento\Framework\DataObject|mixed $data
      *
      * @return $this
-     * @throws LocalizedException
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function assignData(\Magento\Framework\DataObject $data)
     {
-
         // route /checkout/onepage/savePayment
         if (!($data instanceof \Magento\Framework\DataObject)) {
             $data = new \Magento\Framework\DataObject($data);
@@ -101,11 +101,10 @@ class Payment
     public function getTicketsOptions()
     {
         $payment_methods = $this->_coreModel->getPaymentMethods();
-        $tickets = array();
+        $tickets = [];
 
         //percorre todos os payments methods
         foreach ($payment_methods['response'] as $pm) {
-
             //filtra por tickets
             if ($pm['payment_type_id'] == "ticket" || $pm['payment_type_id'] == "atm") {
                 $tickets[] = $pm;
@@ -115,7 +114,8 @@ class Payment
         return $tickets;
     }
 
-    function setOrderSubtotals($data) {
+    public function setOrderSubtotals($data)
+    {
         $total = $data['transaction_details']['total_paid_amount'];
         $order = $this->getInfoInstance()->getOrder();
         $order->setGrandTotal($total);

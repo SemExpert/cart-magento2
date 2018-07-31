@@ -1,8 +1,13 @@
 <?php
 namespace MercadoPago\Core\Block\Calculator;
 
-class CalculatorForm
-    extends \Magento\Framework\View\Element\Template
+/**
+ * Class CalculatorForm
+ *
+ * @api
+ * @package MercadoPago\Core\Block\Calculator
+ */
+class CalculatorForm extends \Magento\Framework\View\Element\Template
 {
 
     const CALCULATOR_JS = 'mercadopago/mercadopago_calculator.js';
@@ -13,7 +18,6 @@ class CalculatorForm
     protected $_helperData;
 
     protected $_amount;
-
 
     /**
      * CalculatorForm constructor.
@@ -49,7 +53,10 @@ class CalculatorForm
      */
     public function getPaymentMethods()
     {
-        $accessToken = $this->_scopeConfig->getValue(\MercadoPago\Core\Helper\Data::XML_PATH_ACCESS_TOKEN, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $accessToken = $this->_scopeConfig->getValue(
+            \MercadoPago\Core\Helper\Data::XML_PATH_ACCESS_TOKEN,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
         return $this->_helperData->getMercadoPagoPaymentMethods($accessToken);
     }
 
@@ -63,7 +70,8 @@ class CalculatorForm
         return $this->_storeManager->getStore()->isCurrentlySecure();
     }
 
-    public function setAmount($amount){
+    public function setAmount($amount)
+    {
         $this->_amount = $amount;
     }
 
@@ -76,5 +84,4 @@ class CalculatorForm
     {
         return $this->_amount;
     }
-
 }

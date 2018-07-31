@@ -6,8 +6,7 @@ namespace MercadoPago\MercadoEnvios\Model\System\Config\Source;
  *
  * @package MercadoPago\MercadoEnvios\Model\System\Config\Source
  */
-class FreeMethod
-    extends \MercadoPago\MercadoEnvios\Model\System\Config\Source\Method
+class FreeMethod extends \MercadoPago\MercadoEnvios\Model\System\Config\Source\Method
 {
     /**
      *
@@ -19,5 +18,4 @@ class FreeMethod
         array_unshift($arr, ['value' => '', 'label'=> __('None')]);
         return $arr;
     }
-
 }

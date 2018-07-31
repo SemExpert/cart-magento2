@@ -1,15 +1,12 @@
 <?php
 namespace MercadoPago\Core\Controller\Api;
 
-
 /**
  * Class Coupon
  *
  * @package Mercadopago\Core\Controller\Notifications
  */
-class Coupon
-    extends \Magento\Framework\App\Action\Action
-
+class Coupon extends \Magento\Framework\App\Action\Action
 {
     /**
      * @var \MercadoPago\Core\Helper\
@@ -38,7 +35,6 @@ class Coupon
      */
     protected $_registry;
 
-
     /**
      * Coupon constructor.
      *
@@ -56,8 +52,7 @@ class Coupon
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
         \Magento\Framework\Registry $registry
-    )
-    {
+    ) {
         parent::__construct($context);
         $this->coreHelper = $coreHelper;
         $this->coreModel = $coreModel;
@@ -109,5 +104,4 @@ class Coupon
 
         return $result;
     }
-
 }

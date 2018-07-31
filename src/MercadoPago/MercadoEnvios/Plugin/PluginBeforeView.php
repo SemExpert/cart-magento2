@@ -8,7 +8,6 @@ namespace MercadoPago\MercadoEnvios\Plugin;
  */
 class PluginBeforeView
 {
-
     /**
      * @var \MercadoPago\MercadoEnvios\Helper\Data
      */
@@ -21,8 +20,7 @@ class PluginBeforeView
      */
     public function __construct(
         \MercadoPago\MercadoEnvios\Helper\Data $shipmentHelper
-    )
-    {
+    ) {
         $this->_shipmentHelper = $shipmentHelper;
     }
 
@@ -32,16 +30,19 @@ class PluginBeforeView
     public function beforeGetBackUrl(\Magento\Shipping\Block\Adminhtml\View $subject)
     {
 
-        if ($subject->getRequest()->getFullActionName() == 'adminhtml_order_shipment_view' && $this->_shipmentHelper->isMercadoEnviosMethod($subject->getShipment()->getOrder()->getShippingMethod())) {
+        if ($subject->getRequest()->getFullActionName() == 'adminhtml_order_shipment_view'
+            && $this->_shipmentHelper->isMercadoEnviosMethod($subject->getShipment()->getOrder()->getShippingMethod())
+        ) {
             $subject->addButton(
                 'custom_button',
                 [
                     'label'   => 'Print shipping label',
-                    'onclick' => 'window.open(\' ' . $this->_shipmentHelper->getTrackingPrintUrl($subject->getRequest()->getParam('shipment_id')) . '\')',
+                    'onclick' => 'window.open(\' '
+                        . $this->_shipmentHelper->getTrackingPrintUrl($subject->getRequest()->getParam('shipment_id'))
+                        . '\')',
                     'class'   => 'go'
                 ]
             );
         }
     }
-
 }

@@ -10,8 +10,7 @@ use Magento\Framework\Event\ObserverInterface;
  *
  * @package MercadoPago\MercadoEnvios\Observer
  */
-class FilterActivePaymentMethods
-    implements ObserverInterface
+class FilterActivePaymentMethods implements ObserverInterface
 {
     /**
      * @var \MercadoPago\MercadoEnvios\Helper\Data
@@ -23,7 +22,6 @@ class FilterActivePaymentMethods
      */
     protected $_useMercadoEnvios;
 
-
     /**
      * FilterActivePaymentMethods constructor.
      *
@@ -31,8 +29,7 @@ class FilterActivePaymentMethods
      */
     public function __construct(
         \MercadoPago\MercadoEnvios\Helper\Data $shipmentHelper
-    )
-    {
+    ) {
         $this->shipmentHelper = $shipmentHelper;
     }
 
@@ -57,7 +54,7 @@ class FilterActivePaymentMethods
     /**
      * @return bool
      */
-    protected function _useMercadoEnvios()
+    protected function _useMercadoEnvios() // @codingStandardsIgnoreLine
     {
         if (empty($this->_useMercadoEnvios)) {
             $quote = $this->shipmentHelper->getQuote();
@@ -67,5 +64,4 @@ class FilterActivePaymentMethods
 
         return $this->_useMercadoEnvios;
     }
-
 }

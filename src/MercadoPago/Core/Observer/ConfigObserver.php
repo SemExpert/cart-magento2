@@ -9,8 +9,7 @@ use Magento\Framework\Event\ObserverInterface;
  *
  * @package MercadoPago\Core\Observer
  */
-class ConfigObserver
-    implements ObserverInterface
+class ConfigObserver implements ObserverInterface
 {
     /**
      * url banners grouped by country
@@ -21,29 +20,37 @@ class ConfigObserver
         "mercadopago_custom"       => [
             "mla" => "http://imgmp.mlstatic.com/org-img/banners/ar/medios/online/468X60.jpg",
             "mlb" => "http://imgmp.mlstatic.com/org-img/MLB/MP/BANNERS/tipo2_468X60.jpg",
-            "mco" => "https://a248.e.akamai.net/secure.mlstatic.com/components/resources/mp/css/assets/desktop-logo-mercadopago.png",
+            "mco" => "https://a248.e.akamai.net/secure.mlstatic.com/components/resources/mp/css/assets/'
+                . 'desktop-logo-mercadopago.png",
             "mlm" => "http://imgmp.mlstatic.com/org-img/banners/mx/medios/MLM_468X60.JPG",
             "mlc" => "https://secure.mlstatic.com/developers/site/cloud/banners/cl/468x60.gif",
             "mlv" => "https://imgmp.mlstatic.com/org-img/banners/ve/medios/468X60.jpg",
-            "mpe" => "https://a248.e.akamai.net/secure.mlstatic.com/components/resources/mp/css/assets/desktop-logo-mercadopago.png",
+            "mpe" => "https://a248.e.akamai.net/secure.mlstatic.com/components/resources/mp/css/assets/'
+                . 'desktop-logo-mercadopago.png",
         ],
         "mercadopago_customticket" => [
-            "mla" => "https://a248.e.akamai.net/secure.mlstatic.com/components/resources/mp/css/assets/desktop-logo-mercadopago.png",
+            "mla" => "https://a248.e.akamai.net/secure.mlstatic.com/components/resources/mp/css/assets/'
+                . 'desktop-logo-mercadopago.png",
             "mlb" => "http://imgmp.mlstatic.com/org-img/MLB/MP/BANNERS/2014/230x60.png",
-            "mco" => "https://a248.e.akamai.net/secure.mlstatic.com/components/resources/mp/css/assets/desktop-logo-mercadopago.png",
-            "mlm" => "https://a248.e.akamai.net/secure.mlstatic.com/components/resources/mp/css/assets/desktop-logo-mercadopago.png",
+            "mco" => "https://a248.e.akamai.net/secure.mlstatic.com/components/resources/mp/css/assets/'
+                . 'desktop-logo-mercadopago.png",
+            "mlm" => "https://a248.e.akamai.net/secure.mlstatic.com/components/resources/mp/css/assets/'
+                . 'desktop-logo-mercadopago.png",
             "mlc" => "https://secure.mlstatic.com/developers/site/cloud/banners/cl/468x60.gif",
             "mlv" => "https://imgmp.mlstatic.com/org-img/banners/ve/medios/468X60.jpg",
-            "mpe" => "https://a248.e.akamai.net/secure.mlstatic.com/components/resources/mp/css/assets/desktop-logo-mercadopago.png",
+            "mpe" => "https://a248.e.akamai.net/secure.mlstatic.com/components/resources/mp/css/assets/'
+                . 'desktop-logo-mercadopago.png",
         ],
         "mercadopago_standard"     => [
             "mla" => "http://imgmp.mlstatic.com/org-img/banners/ar/medios/online/468X60.jpg",
             "mlb" => "http://imgmp.mlstatic.com/org-img/MLB/MP/BANNERS/tipo2_468X60.jpg",
-            "mco" => "https://a248.e.akamai.net/secure.mlstatic.com/components/resources/mp/css/assets/desktop-logo-mercadopago.png",
+            "mco" => "https://a248.e.akamai.net/secure.mlstatic.com/components/resources/mp/css/assets/'
+                . 'desktop-logo-mercadopago.png",
             "mlc" => "https://secure.mlstatic.com/developers/site/cloud/banners/cl/468x60.gif",
             "mlv" => "https://imgmp.mlstatic.com/org-img/banners/ve/medios/468X60.jpg",
             "mlm" => "http://imgmp.mlstatic.com/org-img/banners/mx/medios/MLM_468X60.JPG",
-            "mpe" => "https://a248.e.akamai.net/secure.mlstatic.com/components/resources/mp/css/assets/desktop-logo-mercadopago.png",
+            "mpe" => "https://a248.e.akamai.net/secure.mlstatic.com/components/resources/mp/css/assets/'
+                . 'desktop-logo-mercadopago.png",
         ]
     ];
 
@@ -87,7 +94,6 @@ class ConfigObserver
     protected $_scopeCode;
     protected $_productMetaData;
 
-
     /**
      * ConfigObserver constructor.
      *
@@ -101,8 +107,7 @@ class ConfigObserver
         \Magento\Config\Model\ResourceModel\Config $configResource,
         \Magento\Backend\Block\Store\Switcher $switcher,
         \Magento\Framework\App\ProductMetadataInterface $productMetadata
-    )
-    {
+    ) {
         $this->_scopeConfig = $scopeConfig;
         $this->configResource = $configResource;
         $this->coreHelper = $coreHelper;
@@ -136,7 +141,6 @@ class ConfigObserver
         $this->checkBanner('mercadopago_custom');
         $this->checkBanner('mercadopago_customticket');
         $this->checkBanner('mercadopago_standard');
-
     }
 
     /**
@@ -194,11 +198,13 @@ class ConfigObserver
             if ($defaultBanner != $currentBanner) {
                 $this->_saveWebsiteConfig('payment/' . $typeCheckout . '/banner_checkout', $defaultBanner);
 
-                $this->coreHelper->log('payment/' . $typeCheckout . '/banner_checkout setted ' . $defaultBanner, self::LOG_NAME);
+                $this->coreHelper->log(
+                    'payment/' . $typeCheckout . '/banner_checkout setted ' . $defaultBanner,
+                    self::LOG_NAME
+                );
             }
         }
     }
-
 
     /**
      * Set configuration value sponsor_id based on current credentials
@@ -235,7 +241,6 @@ class ConfigObserver
         $this->coreHelper->log("API Users response", self::LOG_NAME, $user);
 
         if ($user['status'] == 200 && !in_array("test_user", $user['response']['tags'])) {
-
             $sponsors = [
                 'MLA' => 222568987,
                 'MLB' => 222567845,
@@ -276,7 +281,9 @@ class ConfigObserver
         );
         if (!empty($accessToken)) {
             if (!$this->coreHelper->isValidAccessToken($accessToken)) {
-                throw new \Magento\Framework\Exception\LocalizedException(__('Mercado Pago - Custom Checkout: Invalid access token'));
+                throw new \Magento\Framework\Exception\LocalizedException(
+                    __('Mercado Pago - Custom Checkout: Invalid access token')
+                );
             }
         }
     }
@@ -300,7 +307,9 @@ class ConfigObserver
         );
         if (!empty($clientId) && !empty($clientSecret)) {
             if (!$this->coreHelper->isValidClientCredentials($clientId, $clientSecret)) {
-                throw new \Magento\Framework\Exception\LocalizedException(__('Mercado Pago - Classic Checkout: Invalid client id or client secret'));
+                throw new \Magento\Framework\Exception\LocalizedException(
+                    __('Mercado Pago - Classic Checkout: Invalid client id or client secret')
+                );
             }
         }
     }
@@ -312,7 +321,6 @@ class ConfigObserver
         } else {
             $this->configResource->saveConfig($path, $value, 'websites', $this->_switcher->getWebsiteId());
         }
-
     }
 
     protected function validateRefundData()
@@ -329,13 +337,20 @@ class ConfigObserver
                 \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
                 $this->_scopeCode
             );
+
             $maxRefunds = $this->_scopeConfig->getValue(
                 \MercadoPago\Core\Helper\Data::XML_PATH_MAXIMUM_PARTIAL_REFUNDS,
                 \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
                 $this->_scopeCode
             );
+
             if (($maxDays === 0) || ($maxRefunds === 0)) {
-                throw new \Magento\Framework\Exception\LocalizedException(__('Mercado Pago - If refunds are available, you must set \'Maximum amount of partial refunds on the same order\' and \'Maximum amount of days until refund is not accepted\''));
+                throw new \Magento\Framework\Exception\LocalizedException(
+                    __(
+                        'Mercado Pago - If refunds are available, you must set \'Maximum amount of partial refunds on '
+                        . 'the same order\' and \'Maximum amount of days until refund is not accepted\''
+                    )
+                );
             }
         }
     }
@@ -360,14 +375,9 @@ class ConfigObserver
             );
 
             $this->sendAnalyticsData($this->coreHelper->getApiInstance($clientId, $clientSecret));
-
         } else {
-
             $this->sendAnalyticsData($this->coreHelper->getApiInstance($accessToken));
-
         }
-
-
     }
 
     /**
@@ -383,27 +393,48 @@ class ConfigObserver
                 "code_version"     => phpversion()
             ],
         ];
-        $standard = $this->_scopeConfig->getValue('payment/mercadopago_standard/active',
+
+        $standard = $this->_scopeConfig->getValue(
+            'payment/mercadopago_standard/active',
             \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
-            $this->_scopeCode);
-        $custom = $this->_scopeConfig->getValue('payment/mercadopago_custom/active',
+            $this->_scopeCode
+        );
+
+        $custom = $this->_scopeConfig->getValue(
+            'payment/mercadopago_custom/active',
             \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
-            $this->_scopeCode);
-        $customTicket = $this->_scopeConfig->getValue('payment/mercadopago_customticket/active',
+            $this->_scopeCode
+        );
+
+        $customTicket = $this->_scopeConfig->getValue(
+            'payment/mercadopago_customticket/active',
             \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
-            $this->_scopeCode);
-        $mercadoEnvios = $this->_scopeConfig->getValue('carriers/mercadoenvios/active',
+            $this->_scopeCode
+        );
+
+        $mercadoEnvios = $this->_scopeConfig->getValue(
+            'carriers/mercadoenvios/active',
             \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
-            $this->_scopeCode);
-        $twoCards = $this->_scopeConfig->getValue('payment/mercadopago_custom/allow_2_cards',
+            $this->_scopeCode
+        );
+
+        $twoCards = $this->_scopeConfig->getValue(
+            'payment/mercadopago_custom/allow_2_cards',
             \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
-            $this->_scopeCode);
-        $customCoupon = $this->_scopeConfig->getValue('payment/mercadopago_custom/coupon_mercadopago',
+            $this->_scopeCode
+        );
+
+        $customCoupon = $this->_scopeConfig->getValue(
+            'payment/mercadopago_custom/coupon_mercadopago',
             \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
-            $this->_scopeCode);
-        $customTicketCoupon = $this->_scopeConfig->getValue('payment/mercadopago_customticket/coupon_mercadopago',
+            $this->_scopeCode
+        );
+
+        $customTicketCoupon = $this->_scopeConfig->getValue(
+            'payment/mercadopago_customticket/coupon_mercadopago',
             \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
-            $this->_scopeCode);
+            $this->_scopeCode
+        );
 
         $request['data']['two_cards'] = $twoCards == 1 ? 'true' : 'false';
         $request['data']['checkout_basic'] = $standard == 1 ? 'true' : 'false';
@@ -422,6 +453,5 @@ class ConfigObserver
         } catch (\Exception $exception) {
             $this->coreHelper->log("Exception thrown on Analytics request", self::LOG_NAME, $exception->getMessage());
         }
-
     }
 }

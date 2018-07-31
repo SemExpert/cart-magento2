@@ -9,8 +9,7 @@ use Magento\Framework\Event\ObserverInterface;
  *
  * @package MercadoPago\Core\Observer
  */
-class RefundObserverAfterSave
-    implements ObserverInterface
+class RefundObserverAfterSave implements ObserverInterface
 {
     /**
      * @var \MercadoPago\Core\Helper\StatusUpdate
@@ -34,8 +33,7 @@ class RefundObserverAfterSave
         \MercadoPago\Core\Helper\Data                       $dataHelper,
         \Magento\Framework\App\Config\ScopeConfigInterface  $scopeConfig,
         \MercadoPago\Core\Helper\StatusUpdate               $statusHelper
-    )
-    {
+    ) {
         $this->_dataHelper = $dataHelper;
         $this->_scopeConfig = $scopeConfig;
         $this->_statusHelper = $statusHelper;
@@ -71,7 +69,6 @@ class RefundObserverAfterSave
 
         $paymentMethod = $order->getPayment()->getMethodInstance()->getCode();
         if (!($paymentMethod == 'mercadopago_standard' || $paymentMethod == 'mercadopago_custom')) {
-
             return;
         }
 

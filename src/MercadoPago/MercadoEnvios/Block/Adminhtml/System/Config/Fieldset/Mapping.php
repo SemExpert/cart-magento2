@@ -6,10 +6,8 @@ namespace MercadoPago\MercadoEnvios\Block\Adminhtml\System\Config\Fieldset;
  *
  * @package MercadoPago\MercadoEnvios\Block\Adminhtml\System\Config\Fieldset
  */
-class Mapping
-    extends \Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray
+class Mapping extends \Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray
 {
-
     /**
      * @var \MercadoPago\MercadoEnvios\Helper\Data
      */
@@ -31,21 +29,29 @@ class Mapping
         \MercadoPago\MercadoEnvios\Helper\Data $helper,
         \Magento\Catalog\Model\ResourceModel\Product\Attribute\Collection $attributeCollection,
         array $data = []
-    )
-    {
-        $this->addColumn('mercadoenvios', array(
-            'label' => __('MercadoEnvíos'),
-            'style' => 'width:120px',
-        ));
-        $this->addColumn('magentoproduct', array(
-            'label' => __('Product Attribute'),
-            'style' => 'width:120px',
-        ));
+    ) {
+        $this->addColumn(
+            'mercadoenvios',
+            [
+                'label' => __('MercadoEnvíos'),
+                'style' => 'width:120px',
+            ]
+        );
+        $this->addColumn(
+            'magentoproduct',
+            [
+                'label' => __('Product Attribute'),
+                'style' => 'width:120px',
+            ]
+        );
 
-        $this->addColumn('unit', array(
-            'label' => __('Attribute Unit'),
-            'style' => 'width:120px',
-        ));
+        $this->addColumn(
+            'unit',
+            [
+                'label' => __('Attribute Unit'),
+                'style' => 'width:120px',
+            ]
+        );
 
         $this->setTemplate('array_dropdown.phtml');
         $this->helper = $helper;
@@ -57,13 +63,27 @@ class Mapping
     /**
      * @return $this
      */
-    public function _getAttributes()
+    public function _getAttributes() // @codingStandardsIgnoreLine
     {
         $attributes = $this->attributeCollection
             ->addFieldToFilter('is_visible', 1)
-            ->addFieldToFilter('frontend_input', ['nin' => ['boolean', 'date', 'datetime', 'gallery', 'image', 'media_image', 'select', 'multiselect', 'textarea']])
+            ->addFieldToFilter(
+                'frontend_input',
+                [
+                    'nin' => [
+                        'boolean',
+                        'date',
+                        'datetime',
+                        'gallery',
+                        'image',
+                        'media_image',
+                        'select',
+                        'multiselect',
+                        'textarea'
+                    ]
+                ]
+            )
             ->load();
-
 
         return $attributes;
     }
@@ -71,11 +91,14 @@ class Mapping
     /**
      * @return array
      */
-    public function _getStoredMappingValues()
+    public function _getStoredMappingValues() // @codingStandardsIgnoreLine
     {
         $prevValues = [];
         foreach ($this->getArrayRows() as $key => $_row) {
-            $prevValues[$key] = ['attribute_code' => $_row->getData('attribute_code'), 'unit' => $_row->getData('unit')];
+            $prevValues[$key] = [
+                'attribute_code' => $_row->getData('attribute_code'),
+                'unit' => $_row->getData('unit')
+            ];
         }
 
         return $prevValues;
@@ -84,7 +107,7 @@ class Mapping
     /**
      * @return array
      */
-    public function _getMeLabel()
+    public function _getMeLabel() // @codingStandardsIgnoreLine
     {
         return [__('Length'), __('Width'), __('Height'), __('Weight')];
     }
